@@ -1,0 +1,38 @@
+version: '3.1'
+
+volumes:
+  db-data:
+
+services:
+
+  db:
+    image: registry.access.redhat.com/rhscl/postgresql-10-rhel7
+    restart: always
+    environment:
+      POSTGRESQL_USER: metabase
+      POSTGRESQL_DATABASE: metabase
+      POSTGRESQL_PASSWORD: metabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/pgsql/data
+
+  metabase:
+    image: wenzowski/metabase
+    restart: always
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: metabase
+      MB_DB_PASS: metabase
+      MB_DB_HOST: db
+      JAVA_TIMEZONE: US/Pacific
+    ports:
+      - "3000:3000"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

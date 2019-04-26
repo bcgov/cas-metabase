@@ -1,0 +1,42 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    openshift.io/image.dockerRepositoryCheck: 2019-04-24T18:15:49Z
+  creationTimestamp: 2019-04-24T18:13:11Z
+  generation: 3
+  name: metabase
+  namespace: wksv3k-tools
+  resourceVersion: "749639037"
+  selfLink: /apis/image.openshift.io/v1/namespaces/wksv3k-tools/imagestreams/metabase
+  uid: 9ec4828b-66bc-11e9-a08c-005056832285
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - annotations: null
+    from:
+      kind: DockerImage
+      name: docker.io/wenzowski/metabase
+    generation: 0
+    importPolicy: {}
+    name: latest
+    referencePolicy:
+      type: Source
+status:
+  dockerImageRepository: docker-registry.default.svc:5000/wksv3k-tools/metabase
+  tags:
+  - items:
+    - created: 2019-04-24T18:15:49Z
+      dockerImageReference: docker.io/wenzowski/metabase@sha256:6d9db08b2b3464021318192b2963ab935aa6244a4bcd3e625fa24c770c6cd247
+      generation: 3
+      image: sha256:6d9db08b2b3464021318192b2963ab935aa6244a4bcd3e625fa24c770c6cd247
+    - created: 2019-04-24T18:15:01Z
+      dockerImageReference: docker.io/wenzowski/metabase@sha256:0ffaddaabce6280fa35077fa9d54bba7bc5c6a3a707c9dc08cff4804978ddfcb
+      generation: 2
+      image: sha256:0ffaddaabce6280fa35077fa9d54bba7bc5c6a3a707c9dc08cff4804978ddfcb
+    - created: 2019-04-24T18:13:11Z
+      dockerImageReference: docker.io/wenzowski/metabase@sha256:719fcebdfb5aea38621d70249601ce8b240396bde8bd6db314474fefdb663203
+      generation: 1
+      image: sha256:719fcebdfb5aea38621d70249601ce8b240396bde8bd6db314474fefdb663203
+    tag: latest
