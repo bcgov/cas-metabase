@@ -88,5 +88,6 @@ workflows:
       - test_anyuid:
           requires:
             - build_and_deploy
+          context: cas-pipeline
           image_name: metabase
           image_tag: ${CIRCLE_SHA1}
