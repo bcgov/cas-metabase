@@ -59,20 +59,22 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-  test-run:
-    machine: true
+  test_anyuid:
+    machine:
+      image: ubuntu-2004:202008-01
     parameters:
       image_tag:
         type: string
       image_name:
         type: string
     steps:
-    # download image?
-      - run: docker pull gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >> .
+    # download image
+      - run: docker pull gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
     # running the docker image with a random userID
       - run: |
-          docker run -u 999999:0 << parameters.image_name >>:<< parameters.image_tag >>
-          docker exec metabase curl --retry 10 --retry-connrefused http://localhost:3000
+          docker run -d -p 3000:3000 -u 999999:0 gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
+          sleep 30s
+          curl --retry 10 --retry-connrefused --fail http://localhost:3000/api/health 
 
 
 workflows:
@@ -83,7 +85,8 @@ workflows:
           context: cas-pipeline
           image_name: metabase
           image_tag: ${CIRCLE_SHA1}
-      - test-run:
-          context: cas-pipeline
+      - test_anyuid:
+          requires:
+            - build_and_deploy
           image_name: metabase
           image_tag: ${CIRCLE_SHA1}
