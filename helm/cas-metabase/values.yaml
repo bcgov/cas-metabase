@@ -1,0 +1,46 @@
+cas-postgres:
+  patroni:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 2Gi
+      requests:
+        cpu: 15m
+        memory: 600Mi
+    persistentVolume:
+      size: 10Gi
+    replicaCount: 3
+    env:
+      ALLOW_NOSSL: true
+      USE_WALG_BACKUP: "true"
+      USE_WALG_RESTORE: "true"
+    walE:
+      enable: true
+      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
+      gcsBucket:
+      # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
+      kubernetesSecret:
+    # options below are required if walE.enable is true
+  namespace:
+  gcs:
+    bucketSuffix:
+
+metabase:
+  image:
+    repository: gcr.io/ggl-cas-storage/metabase
+    tag: latest
+  database:
+    type: postgres
+    host: cas-metabase-patroni
+    port: 5432
+    dbname: metabase
+    existingSecret: cas-metabase
+    existingSecretUsernameKey: database-user
+    existingSecretPasswordKey: database-password
+  resources:
+    limits:
+      cpu: 1
+      memory: 4Gi
+    requests:
+      cpu: 50m
+      memory: 2Gi

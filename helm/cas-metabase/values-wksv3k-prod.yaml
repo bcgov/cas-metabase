@@ -1,0 +1,20 @@
+cas-postgres:
+  patroni:
+    replicaCount: 4
+    resources:
+      limits:
+        cpu: 3000m
+        memory: 2Gi
+      requests:
+        cpu: 15m
+        memory: 600Mi
+    walE:
+      enable: true
+      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
+      gcsBucket: wksv3k-prod-ciip-backups
+      # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
+      kubernetesSecret: gcp-wksv3k-prod-ciip-backups-service-account-key # pragma: allowlist secret
+    # options below are required if walE.enable is true
+  namespace: wksv3k-prod
+  gcs:
+    bucketSuffix: ciip-backups

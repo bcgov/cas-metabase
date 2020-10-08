@@ -1,0 +1,15 @@
+cas-postgres:
+  patroni:
+    walE:
+      enable: true
+      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
+      gcsBucket: wksv3k-dev-metabase-backups
+      # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
+      kubernetesSecret: gcp-wksv3k-dev-metabase-backups-service-account-key # pragma: allowlist secret
+    # options below are required if walE.enable is true
+  namespace: wksv3k-dev
+  gcs:
+    bucketSuffix: metabase-backups
+
+route:
+  host: cas-metabase-dev.pathfinder.gov.bc.ca

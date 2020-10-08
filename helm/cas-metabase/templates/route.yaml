@@ -1,0 +1,27 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}
+  labels:
+{{ include "cas-metabase.labels" . | indent 4 }}
+
+spec:
+  host: {{ .Values.route.host }}
+  port:
+    targetPort: metabase
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name:  {{ template "cas-metabase.fullname" . }}
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - status: 'True'
+      type: Admitted
+    host: {{ .Values.route.host }}
+    routerName: router
+    wildcardPolicy: None
