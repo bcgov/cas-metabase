@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}-create-user-db
+{{- if .Release.IsUpgrade }}
+# This job requires the cas-postgres dependency to be running,
+# and is required for the app deployment to become ready.
+# Therefore, it needs to be part of the initial install (instead of a pre/post install hook)
+# For upgrades, it needs to be a hook so that the delete policy kicks in
+# and the previous job template gets deleted (as editing job templates is not allowed)
+# It can be a hook during upgrades as the cas-postgres dependency will already be running
+  annotations:
+    "helm.sh/hook": "pre-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "0"
+{{- end }}
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 10
+  template:
+    metadata:
+      name: {{ template "cas-metabase.fullname" . }}-create-user-db
+    spec:
+      containers:
+        - name: {{ template "cas-metabase.fullname" . }}-create-user-db
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          image: {{ index .Values "cas-postgres" "patroni" "image" "repository" }}:{{ index .Values "cas-postgres" "patroni" "image" "tag" }}
+          env:
+            - name: PGDATABASE
+              value: postgres
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password-superuser
+                  name: {{ template "cas-metabase.fullname" . }}-patroni
+            - name: PGPORT
+              value: "5432"
+            - name: PGHOST
+              value: {{ template "cas-metabase.fullname" . }}-patroni
+            - name: METABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: {{ template "cas-metabase.fullname" . }}
+            - name: METABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: {{ template "cas-metabase.fullname" . }}
+            - name: METABASE_DATABASE
+              value: metabase
+          command:
+                - /usr/bin/env
+                - bash
+                - -c
+                - |
+                  set -euo pipefail;
+                  create-user-db -d $(METABASE_DATABASE) -u $(METABASE_USER) -p $(METABASE_PASSWORD) --owner;
+      restartPolicy: Never
