@@ -1,0 +1,9 @@
+dependencies:
+  override: []
+deploy:
+  override:
+    - git submodule update --init
+    - make install:
+        timeout: 300
+review:
+  checklist: []
