@@ -3,10 +3,13 @@ cas-postgres:
     walE:
       enable: true
       # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
-      gcsBucket: wksv3k-test-ciip-backups
+      gcsBucket: wksv3k-test-metabase-backups
       # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret: gcp-wksv3k-test-ciip-backups-service-account-key # pragma: allowlist secret
+      kubernetesSecret: gcp-wksv3k-test-metabase-backups-service-account-key # pragma: allowlist secret
     # options below are required if walE.enable is true
   namespace: wksv3k-test
   gcs:
-    bucketSuffix: ciip-backups
+    bucketSuffix: metabase-backups
+
+route:
+  host: cas-metabase-test.pathfinder.gov.bc.ca
