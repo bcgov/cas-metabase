@@ -1,3 +1,4 @@
+{{- if .Values.route.enable }}
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -25,3 +26,4 @@ status:
     host: {{ .Values.route.host }}
     routerName: router
     wildcardPolicy: None
+{{- end }}

@@ -12,4 +12,5 @@ cas-postgres:
     bucketSuffix: metabase-backups
 
 route:
+  enable: true
   host: cas-metabase-dev.pathfinder.gov.bc.ca
