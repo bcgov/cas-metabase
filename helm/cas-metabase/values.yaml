@@ -26,6 +26,7 @@ cas-postgres:
     bucketSuffix:
 
 metabase:
+  replicaCount: 2
   image:
     repository: gcr.io/ggl-cas-storage/metabase
     tag: latest
