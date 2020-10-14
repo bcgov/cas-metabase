@@ -9,14 +9,14 @@ cas-postgres:
         memory: 600Mi
     walE:
       enable: true
-      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
-      gcsBucket: wksv3k-prod-metabase-backups
+      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}, has to be < 28 characters
+      gcsBucket: wksv3k-prod-mb-backups
       # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret: gcp-wksv3k-prod-metabase-backups-service-account-key # pragma: allowlist secret
+      kubernetesSecret: gcp-wksv3k-prod-mb-backups-service-account-key # pragma: allowlist secret
     # options below are required if walE.enable is true
   namespace: wksv3k-prod
   gcs:
-    bucketSuffix: metabase-backups
+    bucketSuffix: mb-backups
 
 route:
   enable: true

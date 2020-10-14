@@ -2,14 +2,14 @@ cas-postgres:
   patroni:
     walE:
       enable: true
-      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
-      gcsBucket: wksv3k-test-metabase-backups
+      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}, has to be < 28 characters
+      gcsBucket: wksv3k-test-mb-backups
       # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret: gcp-wksv3k-test-metabase-backups-service-account-key # pragma: allowlist secret
+      kubernetesSecret: gcp-wksv3k-test-mb-backups-service-account-key # pragma: allowlist secret
     # options below are required if walE.enable is true
   namespace: wksv3k-test
   gcs:
-    bucketSuffix: metabase-backups
+    bucketSuffix: mb-backups
 
 route:
   enable: true
