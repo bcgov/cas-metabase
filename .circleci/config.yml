@@ -4,7 +4,7 @@ orbs:
   gcp-gcr: circleci/gcp-gcr@0.7.1
 
 jobs:
-  build_and_deploy: 
+  build_and_deploy:
     executor: gcp-gcr/default
     parameters:
       dockerfile:
@@ -31,15 +31,18 @@ jobs:
             set +o pipefail
             docker load -i /tmp/<< parameters.image_name >>.tar | true
       - run:
-          name: Build tools Docker image
+          name: Log in to DockerHub
+          command: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin registry.hub.docker.com
+      - run:
+          name: Build Docker image
           command: >-
-              docker build --cache-from=<< parameters.image_name >>
-              -t << parameters.image_name >>:latest
-              -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:latest
-              -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:v0.36.6
-              -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
-              -f << parameters.dockerfile >>
-              .
+            docker build --cache-from=<< parameters.image_name >>
+            -t << parameters.image_name >>:latest
+            -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:latest
+            -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:v0.36.6
+            -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
+            -f << parameters.dockerfile >>
+            .
       - run:
           name: Save Docker image layer cache
           command: |
@@ -68,14 +71,13 @@ jobs:
       image_name:
         type: string
     steps:
-    # download image
+      # download image
       - run: docker pull gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
-    # running the docker image with a random userID
+      # running the docker image with a random userID
       - run: |
           docker run -d -p 3000:3000 -u 999999:0 gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
           sleep 30s
-          curl --retry 10 --retry-connrefused --fail http://localhost:3000/api/health 
-
+          curl --retry 10 --retry-connrefused --fail http://localhost:3000/api/health
 
 workflows:
   version: 2
