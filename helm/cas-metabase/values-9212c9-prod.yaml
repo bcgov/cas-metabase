@@ -1,16 +1,23 @@
 cas-postgres:
   patroni:
+    resources:
+      limits:
+        cpu: "1"
+        memory: 2Gi
+      requests:
+        cpu: 15m
+        memory: 600Mi
     walE:
       enable: true
       # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}, has to be < 28 characters
-      gcsBucket: wksv3k-test-mb-backups
+      gcsBucket: 9212c9-prod-mb-backups
       # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret: gcp-wksv3k-test-mb-backups-service-account-key # pragma: allowlist secret
+      kubernetesSecret: gcp-9212c9-prod-mb-backups-service-account-key # pragma: allowlist secret
     # options below are required if walE.enable is true
-  namespace: wksv3k-test
+  namespace: 9212c9-prod
   gcs:
     bucketSuffix: mb-backups
 
 route:
   enable: true
-  host: cas-metabase-test.pathfinder.gov.bc.ca
+  host: cas-metabase.apps.silver.devops.gov.bc.ca

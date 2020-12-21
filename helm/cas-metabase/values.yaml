@@ -8,7 +8,8 @@ cas-postgres:
         cpu: 15m
         memory: 600Mi
     persistentVolume:
-      size: 10Gi
+      storageClass: netapp-block-standard
+      size: 5Gi
     replicaCount: 3
     env:
       ALLOW_NOSSL: true

@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 include .pipeline/oc.mk
 include .pipeline/git.mk
 
-PATHFINDER_PREFIX := wksv3k
+PATHFINDER_PREFIX := 9212c9
 
 .PHONY: whoami
 whoami:
