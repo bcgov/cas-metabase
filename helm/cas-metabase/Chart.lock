@@ -1,9 +1,9 @@
 dependencies:
 - name: cas-postgres
   repository: https://bcgov.github.io/cas-postgres/
-  version: 0.7.1
+  version: 0.7.2
 - name: metabase
   repository: file://../metabase
   version: 0.12.1
-digest: sha256:fc5d31a076f6f3fc12729d48e1992e7ccf47f591b895d16c6e9739943fd1aa2f
-generated: "2020-12-21T09:57:03.318089098-08:00"
+digest: sha256:bad930ead885316ff369d32116819e04878772e4c9d68c2905229923dc441cf3
+generated: "2020-12-21T10:59:45.282877009-08:00"
