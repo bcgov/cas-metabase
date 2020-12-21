@@ -34,3 +34,23 @@ Return the apiVersion of deployment.
 {{- print "apps/v1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "metabase.labels" -}}
+helm.sh/chart: {{ include "metabase.chart" . }}
+{{ include "metabase.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "metabase.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "metabase.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

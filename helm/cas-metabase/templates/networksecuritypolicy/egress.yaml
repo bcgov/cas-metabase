@@ -1,0 +1,12 @@
+kind: NetworkSecurityPolicy
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+metadata:
+  name: {{ include "cas-metabase.fullname" . }}-egress
+  labels: {{ include "cas-metabase.labels" . | nindent 4 }}
+spec:
+  description: allow everything within this release to communicate with external networks
+  source:
+    - - $namespace={{ .Release.Namespace }}
+      - app.kubernetes.io/name={{ include "cas-metabase.name" . }}
+  destination:
+    - - ext:network=any

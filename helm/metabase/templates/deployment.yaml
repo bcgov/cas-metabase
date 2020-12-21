@@ -3,15 +3,11 @@ kind: Deployment
 metadata:
   name: {{ template "metabase.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ template "metabase.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{ include "metabase.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "metabase.name" . }}
+      app: {{ include "metabase.selectorLabels" . | nindent 4 }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
@@ -20,9 +16,7 @@ spec:
         {{- if .Values.podAnnotations }}
 {{ toYaml .Values.podAnnotations | trim | indent 8 }}
         {{- end }}
-      labels:
-        app: {{ template "metabase.name" . }}
-        release: {{ .Release.Name }}
+      labels: {{ include "metabase.labels" . | nindent 8 }}
         {{- if .Values.podLabels }}
 {{ toYaml .Values.podLabels | trim | indent 8 }}
         {{- end }}

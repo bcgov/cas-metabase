@@ -21,6 +21,7 @@ spec:
   template:
     metadata:
       name: {{ template "cas-metabase.fullname" . }}-create-user-db
+      labels: {{ include "cas-metabase.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ template "cas-metabase.fullname" . }}-create-user-db
