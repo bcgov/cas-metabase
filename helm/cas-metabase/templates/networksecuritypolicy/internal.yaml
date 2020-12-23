@@ -7,12 +7,12 @@ spec:
   description: allow everything within this release to communicate
   source:
     - - $namespace={{ .Release.Namespace }}
-      - app.kubernetes.io/name={{ include "cas-metabase.name" . }}
+      - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
     - - $namespace={{ .Release.Namespace }}
       - release={{ include "cas-metabase.name" . }}
 
   destination:
     - - $namespace={{ .Release.Namespace }}
-      - app.kubernetes.io/name={{ include "cas-metabase.name" . }}
+      - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
     - - $namespace={{ .Release.Namespace }}
       - release={{ include "cas-metabase.name" . }}

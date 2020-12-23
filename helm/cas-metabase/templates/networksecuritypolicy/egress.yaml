@@ -7,6 +7,6 @@ spec:
   description: allow everything within this release to communicate with external networks
   source:
     - - $namespace={{ .Release.Namespace }}
-      - app.kubernetes.io/name={{ include "cas-metabase.name" . }}
+      - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
   destination:
     - - ext:network=any

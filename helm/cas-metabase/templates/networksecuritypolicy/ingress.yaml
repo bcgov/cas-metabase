@@ -10,5 +10,5 @@ spec:
 
   destination:
     - - $namespace={{ .Release.Namespace }}
-      - app.kubernetes.io/name={{ include "cas-metabase.name" . }}
+      - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
       - app.kubernetes.io/component=app
