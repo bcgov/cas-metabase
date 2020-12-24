@@ -48,3 +48,8 @@ metabase:
       memory: 2Gi
   podLabels:
     app.kubernetes.io/component: app
+
+networkSecurityPolicies:
+  ciip:
+    namespace: ""
+    instanceName: cas-ciip-portal
