@@ -10,7 +10,7 @@ spec:
       - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
 
   destination:
-    - - $namespace={{ .Values.networkSecurityPolicies.ciip.namespace }}
+    - - $namespace={{ .Values.networkSecurityPolicies.ggircs.namespace }}
       - app.kubernetes.io/instance={{ .Values.networkSecurityPolicies.ggircs.instanceName }}
-    - - $namespace={{ .Values.networkSecurityPolicies.ciip.namespace }}
+    - - $namespace={{ .Values.networkSecurityPolicies.ggircs.namespace }}
       - release={{ .Values.networkSecurityPolicies.ggircs.instanceName }}
