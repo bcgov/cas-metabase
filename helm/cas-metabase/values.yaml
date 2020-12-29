@@ -53,3 +53,6 @@ networkSecurityPolicies:
   ciip:
     namespace: ""
     instanceName: cas-ciip-portal
+  ggircs:
+    namespace: ""
+    instanceName: cas-ggircs

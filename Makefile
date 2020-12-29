@@ -14,5 +14,6 @@ install:
 	helm upgrade --install --atomic --timeout 300s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 	--set metabase.image.tag=$(GIT_SHA1) \
 	--set networkSecurityPolicies.ciip.namespace="$(CIIP_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
+	--set networkSecurityPolicies.ggircs.namespace="$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 	--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
 	cas-metabase ./helm/cas-metabase;
