@@ -12,3 +12,5 @@ spec:
   destination:
     - - $namespace={{ .Values.networkSecurityPolicies.ciip.namespace }}
       - app.kubernetes.io/instance={{ .Values.networkSecurityPolicies.ggircs.instanceName }}
+    - - $namespace={{ .Values.networkSecurityPolicies.ciip.namespace }}
+      - release={{ .Values.networkSecurityPolicies.ggircs.instanceName }}
