@@ -3,11 +3,7 @@ kind: Service
 metadata:
   name: {{ template "metabase.fullname" . }}
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ template "metabase.name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  labels: {{ include "metabase.labels" . | nindent 4 }}
 {{- if .Values.service.annotations }}
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
@@ -26,6 +22,4 @@ spec:
 {{- end}}
       protocol: TCP
       name: {{ .Values.service.name }}
-  selector:
-    app: {{ template "metabase.name" . }}
-    release: {{ .Release.Name }}
+  selector: {{ include "metabase.selectorLabels" . | nindent 4 }}

@@ -8,7 +8,8 @@ cas-postgres:
         cpu: 15m
         memory: 600Mi
     persistentVolume:
-      size: 10Gi
+      storageClass: netapp-block-standard
+      size: 5Gi
     replicaCount: 3
     env:
       ALLOW_NOSSL: true
@@ -45,3 +46,13 @@ metabase:
     requests:
       cpu: 50m
       memory: 2Gi
+  podLabels:
+    app.kubernetes.io/component: app
+
+networkSecurityPolicies:
+  ciip:
+    namespace: ""
+    instanceName: cas-ciip-portal
+  ggircs:
+    namespace: ""
+    instanceName: cas-ggircs

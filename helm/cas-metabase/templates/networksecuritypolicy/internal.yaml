@@ -1,0 +1,18 @@
+kind: NetworkSecurityPolicy
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+metadata:
+  name: {{ include "cas-metabase.fullname" . }}-internal
+  labels: {{ include "cas-metabase.labels" . | nindent 4 }}
+spec:
+  description: allow everything within this release to communicate
+  source:
+    - - $namespace={{ .Release.Namespace }}
+      - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
+    - - $namespace={{ .Release.Namespace }}
+      - release={{ include "cas-metabase.name" . }}
+
+  destination:
+    - - $namespace={{ .Release.Namespace }}
+      - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
+    - - $namespace={{ .Release.Namespace }}
+      - release={{ include "cas-metabase.name" . }}

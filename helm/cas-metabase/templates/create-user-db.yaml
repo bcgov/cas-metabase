@@ -1,19 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "cas-metabase.fullname" . }}-create-user-db
-{{- if .Release.IsUpgrade }}
-# This job requires the cas-postgres dependency to be running,
-# and is required for the app deployment to become ready.
-# Therefore, it needs to be part of the initial install (instead of a pre/post install hook)
-# For upgrades, it needs to be a hook so that the delete policy kicks in
-# and the previous job template gets deleted (as editing job templates is not allowed)
-# It can be a hook during upgrades as the cas-postgres dependency will already be running
-  annotations:
-    "helm.sh/hook": "pre-upgrade"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
-    "helm.sh/hook-weight": "0"
-{{- end }}
+  name: {{ template "cas-metabase.fullname" . }}-create-user-db-{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}
 spec:
   parallelism: 1
   completions: 1
@@ -21,6 +9,7 @@ spec:
   template:
     metadata:
       name: {{ template "cas-metabase.fullname" . }}-create-user-db
+      labels: {{ include "cas-metabase.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ template "cas-metabase.fullname" . }}-create-user-db
