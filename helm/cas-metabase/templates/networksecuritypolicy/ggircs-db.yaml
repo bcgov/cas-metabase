@@ -1,3 +1,4 @@
+{{- if .Values.networkSecurityPolicies.enable }}
 kind: NetworkSecurityPolicy
 apiVersion: security.devops.gov.bc.ca/v1alpha1
 metadata:
@@ -14,3 +15,4 @@ spec:
       - app.kubernetes.io/instance={{ .Values.networkSecurityPolicies.ggircs.instanceName }}
     - - $namespace={{ .Values.networkSecurityPolicies.ggircs.namespace }}
       - release={{ .Values.networkSecurityPolicies.ggircs.instanceName }}
+{{- end }}
