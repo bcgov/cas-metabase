@@ -1,3 +1,4 @@
+{{- if .Values.networkSecurityPolicies.enable }}
 kind: NetworkSecurityPolicy
 apiVersion: security.devops.gov.bc.ca/v1alpha1
 metadata:
@@ -16,3 +17,4 @@ spec:
       - app.kubernetes.io/instance={{ include "cas-metabase.name" . }}
     - - $namespace={{ .Release.Namespace }}
       - release={{ include "cas-metabase.name" . }}
+{{- end }}

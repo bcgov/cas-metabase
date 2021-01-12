@@ -50,6 +50,7 @@ metabase:
     app.kubernetes.io/component: app
 
 networkSecurityPolicies:
+  enable: true
   ciip:
     namespace: ""
     instanceName: cas-ciip-portal
