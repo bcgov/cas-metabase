@@ -16,7 +16,7 @@ spec:
 {{- end}}
   ports:
     - port: {{ .Values.service.externalPort }}
-      targetPort: {{ .Values.service.internalPort }}
+      targetPort: {{ .Values.nginx.port }}
 {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
 {{- end}}
