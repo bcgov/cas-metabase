@@ -1,0 +1,28 @@
+{{- if .Values.nginx.enable }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "metabase.fullname" . }}-nginx-config
+  labels: {{ include "metabase.labels" . | nindent 4 }}
+data:
+  default.conf: |
+    server {
+{{- if .Values.nginx.sslTermination }}
+      listen {{ .Values.nginx.port }} ssl;
+      listen [::]:{{ .Values.nginx.port }} ssl;
+      ssl_certificate     /home/.acme.sh/{{ .Values.nginx.hostName }}/{{ .Values.nginx.hostName }}.cer;
+      ssl_certificate_key /home/.acme.sh/{{ .Values.nginx.hostName }}/{{ .Values.nginx.hostName }}.key;
+{{- else }}
+      listen {{ .Values.nginx.port }};
+      listen [::]:{{ .Values.nginx.port }};
+{{- end }}
+      server_name  _;      
+      location / {
+        proxy_pass http://localhost:{{ .Values.service.internalPort }};
+      }
+
+      location ^~ /.well-known/acme-challenge/ {
+        root /home/;
+      }
+    }
+{{- end }}

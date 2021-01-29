@@ -137,4 +137,7 @@ affinity: {}
 
 nginx:
   enable: true
+  sslTermination: true
+  hostName: ~
   port: 3001
+  storageClassName: netapp-file-standard

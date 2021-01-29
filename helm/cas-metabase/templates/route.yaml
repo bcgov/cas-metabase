@@ -10,9 +10,11 @@ spec:
   host: {{ .Values.route.host }}
   port:
     targetPort: metabase
+{{- if .Values.metabase.nginx.sslTermination }}
   tls:
     insecureEdgeTerminationPolicy: Redirect
-    termination: edge
+    termination: passthrough
+{{- end }}
   to:
     kind: Service
     name:  {{ template "cas-metabase.fullname" . }}
