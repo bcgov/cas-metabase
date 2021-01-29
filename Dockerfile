@@ -1,4 +1,4 @@
-FROM metabase/metabase:v0.36.6
+FROM metabase/metabase:v0.37.8
 
 RUN mkdir -p /home/metabase
 COPY ./run_metabase.sh /app/run_metabase.sh
