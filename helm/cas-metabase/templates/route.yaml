@@ -10,7 +10,7 @@ spec:
   host: {{ .Values.route.host }}
   port:
     targetPort: metabase
-{{- if .Values.metabase.nginx.sslTermination }}
+{{- if .Values.metabase.nginxSidecar.sslTermination }}
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: passthrough

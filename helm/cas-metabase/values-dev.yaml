@@ -16,6 +16,6 @@ route:
   host: cas-metabase-dev.apps.silver.devops.gov.bc.ca
 
 metabase:
-  nginx:
+  nginxSidecar:
     enable: true
     hostName: cas-metabase-dev.apps.silver.devops.gov.bc.ca

@@ -1,4 +1,13 @@
-{{- if not .Values.metabase.nginx.sslTermination }}
+{{- if not .Values.metabase.nginxSidecar.sslTermination }}
+
+{{- $caServer := "https://acme-v02.api.letsencrypt.org/directory" }}
+
+{{- if .Values.metabase.nginxSidecar.caServerSecret }}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace .Values.metabase.nginxSidecar.caServerSecret ) }}
+{{- $caServer = (index $secret.data .Values.metabase.nginxSidecar.caServerKey) | b64dec }}
+{{- end -}}
+
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -39,10 +48,10 @@ spec:
               set -euxo pipefail;
               if [ ! -f /tmp/.acme.sh/{{ .Values.route.host }}/{{ .Values.route.host }}.cer ]; then
                 echo "Getting a new cert from Let's Encrypt for {{ .Values.route.host }}";
-                git clone --branch 2.8.6 https://github.com/acmesh-official/acme.sh.git /tmp/acme.sh;
+                git clone --branch 2.8.8 https://github.com/acmesh-official/acme.sh.git /tmp/acme.sh;
                 cd /tmp/acme.sh;
-                ./acme.sh install --force --home /tmp;
-                ./acme.sh --issue -d {{ .Values.route.host }} -w /tmp;
+                ./acme.sh --install --force --server {{ $caServer }} -m matthieu@button.is ;
+                ./acme.sh --issue -d {{ .Values.route.host }} -w /tmp --server {{ $caServer }} -m matthieu@button.is;
               fi;
           volumeMounts:
             - mountPath: /tmp/.acme.sh

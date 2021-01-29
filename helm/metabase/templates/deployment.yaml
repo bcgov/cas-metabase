@@ -12,8 +12,8 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
-{{- if .Values.nginx.enable }}
-        checksum/nginxconfig: {{ include (print $.Template.BasePath "/nginx-configmap.yaml") . | sha256sum }}
+{{- if .Values.nginxSidecar.enable }}
+        checksum/nginxconfig: {{ include (print $.Template.BasePath "/nginx/nginx-configmap.yaml") . | sha256sum }}
 {{- end }}
         {{- if .Values.podAnnotations }}
 {{ toYaml .Values.podAnnotations | trim | indent 8 }}
@@ -25,13 +25,13 @@ spec:
     spec:
       imagePullSecrets:
         - name: dockerhub-registry
-{{- if .Values.nginx.enable }}
+{{- if .Values.nginxSidecar.enable }}
       containers:
         - name: {{ .Chart.Name }}-nginx
           image: twalter/openshift-nginx # todo: make our own container
           imagePullPolicy: Always
           ports:
-            - containerPort: {{ .Values.nginx.port }}
+            - containerPort: {{ .Values.nginxSidecar.port }}
           volumeMounts:
             - name: nginx-configs
               mountPath: /etc/nginx/conf.d
@@ -174,7 +174,7 @@ spec:
             - key: log4j.properties
               path: log4j.properties
         {{- end }}
-        {{- if .Values.nginx.enable }}
+        {{- if .Values.nginxSidecar.enable }}
         - name: nginx-configs
           configMap:
             name: {{ template "metabase.fullname" . }}-nginx-config

@@ -135,9 +135,17 @@ tolerations: []
 ##
 affinity: {}
 
-nginx:
-  enable: true
+# The nginx sidecar container provides an easier solution for SSL termination,
+# compared to setting up a jetty keyserver
+# which is what one would need to do if doing ssl termination in the metabase container
+# The sidecar also acts as a static file server for the ".well-known/acme-challenge/" resources,
+# used for the Certificate Authority to verify host ownership.
+nginxSidecar:
+  enable: false
+  # If false, the nginx sidecar only acts as a reverse proxy and serves the acme-challenge.
+  # This should be false when issuing the SSL certificate for the first time
   sslTermination: true
+  # Used by the sidecar to locate the correct certificate and key
   hostName: ~
   port: 3001
-  storageClassName: netapp-file-standard
+  storageClassName: ~

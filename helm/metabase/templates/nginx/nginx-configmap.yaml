@@ -1,4 +1,4 @@
-{{- if .Values.nginx.enable }}
+{{- if .Values.nginxSidecar.enable }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,14 +7,14 @@ metadata:
 data:
   default.conf: |
     server {
-{{- if .Values.nginx.sslTermination }}
-      listen {{ .Values.nginx.port }} ssl;
-      listen [::]:{{ .Values.nginx.port }} ssl;
-      ssl_certificate     /home/.acme.sh/{{ .Values.nginx.hostName }}/{{ .Values.nginx.hostName }}.cer;
-      ssl_certificate_key /home/.acme.sh/{{ .Values.nginx.hostName }}/{{ .Values.nginx.hostName }}.key;
+{{- if .Values.nginxSidecar.sslTermination }}
+      listen {{ .Values.nginxSidecar.port }} ssl;
+      listen [::]:{{ .Values.nginxSidecar.port }} ssl;
+      ssl_certificate     /home/.acme.sh/{{ .Values.nginxSidecar.hostName }}/{{ .Values.nginxSidecar.hostName }}.cer;
+      ssl_certificate_key /home/.acme.sh/{{ .Values.nginxSidecar.hostName }}/{{ .Values.nginxSidecar.hostName }}.key;
 {{- else }}
-      listen {{ .Values.nginx.port }};
-      listen [::]:{{ .Values.nginx.port }};
+      listen {{ .Values.nginxSidecar.port }};
+      listen [::]:{{ .Values.nginxSidecar.port }};
 {{- end }}
       server_name  _;      
       location / {
