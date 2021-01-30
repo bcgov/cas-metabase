@@ -28,8 +28,8 @@ spec:
 {{- if .Values.nginxSidecar.enable }}
       containers:
         - name: {{ .Chart.Name }}-nginx
-          image: twalter/openshift-nginx # todo: make our own container
-          imagePullPolicy: Always
+          image: "{{ .Values.nginxSidecar.image.repository }}:{{ .Values.nginxSidecar.image.tag }}"
+          imagePullPolicy: {{ .Values.nginxSidecar.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.nginxSidecar.port }}
           volumeMounts:

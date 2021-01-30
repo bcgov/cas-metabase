@@ -142,6 +142,10 @@ affinity: {}
 # used for the Certificate Authority to verify host ownership.
 nginxSidecar:
   enable: false
+  image:
+    repository: nginx
+    tag: latest
+    pullPolicy: Always
   # If false, the nginx sidecar only acts as a reverse proxy and serves the acme-challenge.
   # This should be false when issuing the SSL certificate for the first time
   sslTermination: true

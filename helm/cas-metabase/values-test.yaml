@@ -18,4 +18,5 @@ route:
 metabase:
   nginxSidecar:
     enable: true
+    # sslTermination: false
     hostName: cas-metabase-test.apps.silver.devops.gov.bc.ca
