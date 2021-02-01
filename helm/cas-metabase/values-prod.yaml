@@ -27,9 +27,9 @@ metabase:
     enable: true
     # set to false to deploy the application with an insecure route,
     # and issue an SSL certificate using acme.sh
-    sslTermination: false
+    # sslTermination: false
     # Use Entrust ACME server. This secret is created by cas-pipeline
-    caServerSecret: cas-acme-url
-    caServerKey: url
+    # caServerSecret: cas-acme-url
+    # caServerKey: url
     caEmail: matthieu@button.is # Todo: update to ggircs@gov.bc.ca when provisioned
     hostName: cas-metabase.nrs.gov.bc.ca
