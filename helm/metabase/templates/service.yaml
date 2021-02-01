@@ -16,7 +16,11 @@ spec:
 {{- end}}
   ports:
     - port: {{ .Values.service.externalPort }}
+      {{- if .Values.nginxSidecar.enable }}
+      targetPort: {{ .Values.nginxSidecar.port }}
+      {{- else }}
       targetPort: {{ .Values.service.internalPort }}
+      {{- end }}
 {{- if .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
 {{- end}}

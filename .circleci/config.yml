@@ -93,3 +93,9 @@ workflows:
           context: cas-pipeline
           image_name: metabase
           image_tag: ${CIRCLE_SHA1}
+      - build_and_deploy:
+          name: nginx_build_and_deploy
+          context: cas-pipeline
+          image_name: nginx
+          dockerfile: nginx-sidecar/Dockerfile
+          image_tag: ${CIRCLE_SHA1}

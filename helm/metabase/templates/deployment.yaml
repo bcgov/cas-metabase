@@ -12,6 +12,9 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+{{- if .Values.nginxSidecar.enable }}
+        checksum/nginxconfig: {{ include (print $.Template.BasePath "/nginx/nginx-configmap.yaml") . | sha256sum }}
+{{- end }}
         {{- if .Values.podAnnotations }}
 {{ toYaml .Values.podAnnotations | trim | indent 8 }}
         {{- end }}
@@ -20,7 +23,23 @@ spec:
 {{ toYaml .Values.podLabels | trim | indent 8 }}
         {{- end }}
     spec:
+      imagePullSecrets:
+        - name: dockerhub-registry
+{{- if .Values.nginxSidecar.enable }}
       containers:
+        - name: {{ .Chart.Name }}-nginx
+          image: "{{ .Values.nginxSidecar.image.repository }}:{{ .Values.nginxSidecar.image.tag }}"
+          imagePullPolicy: {{ .Values.nginxSidecar.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.nginxSidecar.port }}
+          volumeMounts:
+            - name: nginx-configs
+              mountPath: /etc/nginx/conf.d
+            - mountPath: /home/.acme.sh
+              name: acme-home
+            - mountPath: /home/.well-known/acme-challenge
+              name: acme-challenge
+{{- end }}
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -154,4 +173,15 @@ spec:
             items:
             - key: log4j.properties
               path: log4j.properties
+        {{- end }}
+        {{- if .Values.nginxSidecar.enable }}
+        - name: nginx-configs
+          configMap:
+            name: {{ template "metabase.fullname" . }}-nginx-config
+        - name: acme-home
+          persistentVolumeClaim:
+            claimName: {{ template "metabase.fullname" . }}-acme-home
+        - name: acme-challenge
+          persistentVolumeClaim:
+            claimName: {{ template "metabase.fullname" . }}-acme-challenge
         {{- end }}

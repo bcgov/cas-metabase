@@ -49,15 +49,6 @@ fi
 #     adduser -D -u $MUID -G metabase metabase
 # fi
 
-# Fix OpenShift fail
-# see https://docs.openshift.com/container-platform/3.11/creating_images/guidelines.html
-if ! whoami &> /dev/null; then
-  if [ -w /etc/passwd ]; then
-    echo "Writing to /etc/passwd"
-    echo "metabase:x:$(id -u):0:metabase user:/home/metabase:/sbin/nologin" >> /etc/passwd
-  fi
-fi
-
 db_file=${MB_DB_FILE:-/home/metabase/metabase.db}
 
 # In order to run metabase as a non-root user in docker, we need to handle various

@@ -1,0 +1,15 @@
+{{- if .Values.nginxSidecar.enable }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "metabase.fullname" . }}-acme-challenge
+  labels: {{ include "metabase.labels" . | nindent 4 }}
+
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 25Mi
+  storageClassName: {{ .Values.nginxSidecar.storageClassName }}
+{{- end }}

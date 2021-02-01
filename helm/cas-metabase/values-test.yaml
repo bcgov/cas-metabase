@@ -14,3 +14,9 @@ cas-postgres:
 route:
   enable: true
   host: cas-metabase-test.apps.silver.devops.gov.bc.ca
+
+metabase:
+  nginxSidecar:
+    enable: true
+    # sslTermination: false
+    hostName: cas-metabase-test.apps.silver.devops.gov.bc.ca
