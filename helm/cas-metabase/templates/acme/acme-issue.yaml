@@ -50,8 +50,8 @@ spec:
                 echo "Getting a new cert from Let's Encrypt for {{ .Values.route.host }}";
                 git clone --branch 2.8.8 https://github.com/acmesh-official/acme.sh.git /tmp/acme.sh;
                 cd /tmp/acme.sh;
-                ./acme.sh --install --force --server {{ $caServer }} -m matthieu@button.is ;
-                ./acme.sh --issue -d {{ .Values.route.host }} -w /tmp --server {{ $caServer }} -m matthieu@button.is;
+                ./acme.sh --install --force --server {{ $caServer }} -m {{ .Values.metabase.nginxSidecar.caAccountEmail }} ;
+                ./acme.sh --issue -d {{ .Values.route.host }} -w /tmp --server {{ $caServer }} -m {{ .Values.metabase.nginxSidecar.caAccountEmail }};
               fi;
           volumeMounts:
             - mountPath: /tmp/.acme.sh
