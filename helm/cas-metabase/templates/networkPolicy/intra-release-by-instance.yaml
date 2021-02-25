@@ -1,0 +1,19 @@
+{{- if .Values.networkPolicies.enable }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "cas-metabase.fullname" . }}-internal-by-instance
+  labels: {{ include "cas-metabase.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ include "cas-metabase.name" . }}
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              release: {{ include "cas-metabase.name" . }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: {{ include "cas-metabase.name" . }}
+{{- end }}
