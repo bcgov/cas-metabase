@@ -64,11 +64,6 @@ metabase:
     caServerKey: ~
     storageClassName: netapp-file-standard
 
-networkSecurityPolicies:
+# Generate k8s NetworkPolicy objects
+networkPolicies:
   enable: true
-  ciip:
-    namespace: ""
-    instanceName: cas-ciip-portal
-  ggircs:
-    namespace: ""
-    instanceName: cas-ggircs
