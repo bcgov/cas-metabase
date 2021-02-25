@@ -7,7 +7,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "cas-metabase.name" . }}
+      app.kubernetes.io/instance: {{ include "cas-metabase.name" . }}
   ingress:
     - from:
         - podSelector:
@@ -15,5 +15,5 @@ spec:
               release: {{ include "cas-metabase.name" . }}
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: {{ include "cas-metabase.name" . }}
+              app.kubernetes.io/instance: {{ include "cas-metabase.name" . }}
 {{- end }}
