@@ -62,7 +62,9 @@ metabase:
     # Otherwise it defaults to Let's Encrypt
     caServerSecret: ~
     caServerKey: ~
+    caAccountEmail: ggircs@gov.bc.ca
     storageClassName: netapp-file-standard
+    renewalDays: 60
 
 # Generate k8s NetworkPolicy objects
 networkPolicies:
