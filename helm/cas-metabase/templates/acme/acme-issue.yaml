@@ -51,7 +51,7 @@ spec:
                 git clone --branch 2.8.8 https://github.com/acmesh-official/acme.sh.git /tmp/acme.sh;
                 cd /tmp/acme.sh;
                 ./acme.sh --install --force --server {{ $caServer }} -m {{ .Values.metabase.nginxSidecar.caAccountEmail }} ;
-                ./acme.sh --issue -d {{ .Values.route.host }} -w /tmp --server {{ $caServer }} -m {{ .Values.metabase.nginxSidecar.caAccountEmail }};
+                ./acme.sh --issue -d {{ .Values.route.host }} -w /tmp --server {{ $caServer }} -m {{ .Values.metabase.nginxSidecar.caAccountEmail }} --days {{.Values.metabase.nginxSidecar.renewalDays}};
               fi;
           volumeMounts:
             - mountPath: /tmp/.acme.sh

@@ -28,5 +28,5 @@ metabase:
     # Use Entrust ACME server. This secret is created by cas-pipeline
     caServerSecret: cas-acme-url
     caServerKey: url
-    caAccountEmail: matthieu@button.is # Todo: update to ggircs@gov.bc.ca when provisioned
     hostName: cas-metabase.nrs.gov.bc.ca
+    renewalDays: 305
