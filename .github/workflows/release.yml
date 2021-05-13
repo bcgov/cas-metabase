@@ -28,6 +28,7 @@ jobs:
 
       - name: Dep Up
         run: |
+          cd helm/cas-metabase
           helm dep up
 
       - name: Run chart-releaser
