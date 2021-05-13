@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - feat/chart-releaser-gh-action
 
 jobs:
   release:
