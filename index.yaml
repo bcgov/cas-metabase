@@ -3,6 +3,23 @@ entries:
   cas-metabase:
   - apiVersion: v2
     appVersion: 0.36.3
+    created: "2021-06-16T20:59:17.954388508Z"
+    dependencies:
+    - name: cas-postgres
+      repository: https://bcgov.github.io/cas-postgres/
+      version: 0.8.0
+    - name: metabase
+      repository: file://../metabase
+      version: 0.12.1
+    description: A Helm chart for the CAS Metabase instance
+    digest: 789de4cf5d4065af722b6b36780b3bb5ac2f5500c3e40216bbb36865451b703d
+    name: cas-metabase
+    type: application
+    urls:
+    - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.2.2/cas-metabase-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 0.36.3
     created: "2020-10-09T12:12:36.567293957-07:00"
     description: A Helm chart for the CAS Metabase instance
     digest: e29bb17924384095b2ff8ef32dd6a9315fe4473ea9517735f9549ca4ecceb05a
@@ -19,4 +36,4 @@ entries:
     urls:
     - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.1.0/cas-metabase-0.1.0.tgz
     version: 0.1.0
-generated: "2020-10-09T11:39:30.14627302-07:00"
+generated: "2021-06-16T20:59:17.954428308Z"
