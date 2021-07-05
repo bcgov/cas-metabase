@@ -1,0 +1,118 @@
+{{- if .Values.restoreFromProd.enable }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}-prod-test-restore
+  labels:
+{{ include "cas-metabase.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade,pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-5"
+spec:
+  suspend: true # This cron job is intended to be triggered manually
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+  activeDeadlineSeconds: 3600
+  template:
+    metadata:
+      labels: {{ include "cas-metabase.labels" . | nindent 8 }}
+        release: cas-metabase
+    spec:
+      activeDeadlineSeconds: 3600
+      restartPolicy: Never
+      containers:
+        - env:
+            - name: MB_USER
+              value: metabase
+            - name: MB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: cas-metabase
+            - name: MB_DATABASE
+              value: metabase
+            - name: MB_HOST
+              value: cas-metabase-patroni
+            - name: MB_PORT
+              value: "5432"
+            - name: SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password-superuser
+                  name: cas-metabase-patroni
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/home/postgres/credentials/credentials.json"
+            - name: GOOGLE_APPLICATION_CREDENTIALS_JSON
+              valueFrom:
+                secretKeyRef:
+                  key: credentials.json
+                  name: {{ .Values.existingGcpSecret }}
+            - name: WALG_GS_PREFIX
+              value: "gs://wksv3k-prod-mb-backups/wal"
+            - name: WALE_GS_PREFIX
+              value: "gs://wksv3k-prod-mb-backups/wal"
+          name: {{ template "cas-metabase.fullname" . }}-prod-test-restore
+          image: {{ .Values.image.psql.repository }}:{{ .Values.image.psql.tag }}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 500Mi
+          command:
+            - /usr/bin/env
+            - bash
+            - -c
+            - |
+              set -euo pipefail;
+              if ! whoami &> /dev/null; then
+                if [ -w /etc/passwd ]; then
+                  echo "postgres:x:$(id -u):0:postgres user:/home/postgres:/sbin/nologin" >> /etc/passwd
+                fi
+              fi
+              rm -rf prod-bak
+              rm -rf credentials
+              echo ADDING GCS CREDENTIALS...
+              mkdir credentials
+              echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > credentials/credentials.json
+              echo DOING WAL-G FETCH NOW...
+              wal-g backup-fetch prod-bak LATEST
+              cd prod-bak
+              echo ADDING recovery.signal...
+              touch recovery.signal
+              echo FIXING PG_HBA...
+              echo 'local all             all                                trust' > pg_hba.conf
+              cd ..
+              chmod -R 0750 ./prod-bak
+              echo STARTING SERVER IN RECOVERY MODE...
+              pg_ctl -D prod-bak start -w -o "-c archive_command='' -c ssl='off' -c hba_file='/home/postgres/prod-bak/pg_hba.conf' -c ident_file='/home/postgres/prod-bak/pg_ident.conf' --restore_command='wal-g wal-fetch %f %p' --recovery_target_action=promote"
+              echo RESTART POSTGRES IN NON-RECOVERY MODE...
+              pg_ctl -D prod-bak stop
+              cd prod-bak
+              rm recovery.signal
+              rm -rf backup_label
+              rm -rf backup_label.old
+              cd ..
+              pg_ctl -D prod-bak start -w -o "-c log_statement='all' -c logging_collector=on -c archive_mode='off' -c archive_command='' -c ssl='off' -c hba_file='/home/postgres/prod-bak/pg_hba.conf' -c ident_file='/home/postgres/prod-bak/pg_ident.conf'"
+
+              echo "$MB_HOST:$MB_PORT:$MB_DATABASE:$MB_USER:$MB_PASSWORD" >> .pgpass
+              echo "$MB_HOST:$MB_PORT:postgres:postgres:$SUPERUSER_PASSWORD" >> .pgpass
+              echo "$MB_HOST:$MB_PORT:$MB_DATABASE:postgres:$SUPERUSER_PASSWORD" >> .pgpass
+
+              chmod 0600 .pgpass
+              echo RESTORING TO TEST...
+              pg_dump --no-password --format=custom metabase |
+              PGPASSFILE=".pgpass" pg_restore --clean --exit-on-error --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres
+          volumeMounts:
+            - mountPath: /home/postgres/
+              name: prod-restore
+      volumes:
+        - name: prod-restore
+          persistentVolumeClaim:
+            claimName: {{ template "cas-metabase.fullname" . }}
+{{- end }}

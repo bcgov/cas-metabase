@@ -15,6 +15,10 @@ route:
   enable: true
   host: cas-metabase-test.apps.silver.devops.gov.bc.ca
 
+restoreFromProd:
+  enable: true
+existingGcpSecret: gcp-9212c9-prod-read-only-service-account-key
+
 metabase:
   nginxSidecar:
     enable: true
