@@ -44,6 +44,16 @@ spec:
                 secretKeyRef:
                   key: password-superuser
                   name: cas-metabase-patroni
+            - name: CIIP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: ciip-readonly-db
+            - name: GGIRCS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: ggircs-readonly-db
           name: {{ template "cas-metabase.fullname" . }}-db-pass
           image: {{ .Values.image.psql.repository }}:{{ .Values.image.psql.tag }}
           resources:
