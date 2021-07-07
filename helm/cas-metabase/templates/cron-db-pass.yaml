@@ -69,7 +69,7 @@ spec:
                 - -c
                 - |
                   set -euo pipefail;
-                  psql -d $MB_DATABASE -u $MB_USER -p $MB_PASSWORD<<EOF
+                  psql -d $MB_DATABASE -u postgres -p $SUPERUSER_PASSWORD<<EOF
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'password' || jsonb '{"password": "$(CIIP_PASSWORD)"}'))
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ggircs')) - 'password' || jsonb '{"password": "$(GGIRCS_PASSWORD)"}'))
                   EOF
