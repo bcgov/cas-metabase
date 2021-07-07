@@ -52,9 +52,9 @@ spec:
                   key: credentials.json
                   name: {{ .Values.existingGcpSecret }}
             - name: WALG_GS_PREFIX
-              value: "gs://wksv3k-prod-mb-backups/wal"
+              value: "gs://9212c9-prod-mb-backups/wal"
             - name: WALE_GS_PREFIX
-              value: "gs://wksv3k-prod-mb-backups/wal"
+              value: "gs://9212c9-prod-mb-backups/wal"
           name: {{ template "cas-metabase.fullname" . }}-prod-test-restore
           image: {{ .Values.image.psql.repository }}:{{ .Values.image.psql.tag }}
           resources:
