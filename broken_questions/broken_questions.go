@@ -9,13 +9,14 @@ import (
 	"encoding/json"
 	"bytes"
 	"time"
+	"os"
 )
 
 // Function logs in and returns a session id for use in subsequent API calls
 func getSession(url string, client http.Client) string {
 	api_endpoint := fmt.Sprintf("%s/api/session", url)
-	user := // <METABASE USERNAME HERE>
-	pass := // <METABASE PASSWORD HERE>
+	user := os.Args[2]
+	pass := os.Args[3]
 
 	// Encode the body data
 	postBody, _ := json.Marshal(map[string]string{
@@ -48,6 +49,7 @@ func getSession(url string, client http.Client) string {
 
 	// Parse the response & return the session id
 	var data map[string]interface{}
+
 	if err := json.Unmarshal(body, &data); err != nil {
 		panic(err)
 	}
@@ -146,8 +148,13 @@ func questionIsBroken(url string, session_id string, id int, client http.Client)
 }
 
 func main() {
+	if len(os.Args) !=4 || os.Args[1] == "-h" {
+		fmt.Println("Usage: broken_questions <Metabase URL> <Username> <Password>")
+		os.Exit(1)
+	}
+
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	url := // <METABASE URL HERE>
+	url := os.Args[1]
 	var broken_ids []int
 
 	// Create http client
@@ -171,10 +178,12 @@ func main() {
 	// Print results
 	if len(broken_ids) == 0 {
 		fmt.Println("No broken questions were found")
+		os.Exit(0)
 	}
 	if len(broken_ids) > 0 {
 		fmt.Println("Broken questions were detected, IDs: ")
 		fmt.Println(broken_ids)
+		os.Exit(1)
 	}
 
 }
