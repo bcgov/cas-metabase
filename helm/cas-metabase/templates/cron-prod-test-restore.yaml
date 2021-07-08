@@ -50,11 +50,11 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: credentials.json
-                  name: {{ .Values.existingGcpSecret }}
+                  name: {{ .Values.gcsProdBackupSAKey}}
             - name: WALG_GS_PREFIX
-              value: "gs://9212c9-prod-mb-backups/wal"
+              value: "gs://{{ template "cas-metabase.namespacePrefix" . }}-prod-mb-backups/wal"
             - name: WALE_GS_PREFIX
-              value: "gs://9212c9-prod-mb-backups/wal"
+              value: "gs://{{ template "cas-metabase.namespacePrefix" . }}-prod-mb-backups/wal"
           name: {{ template "cas-metabase.fullname" . }}-prod-test-restore
           image: {{ .Values.image.psql.repository }}:{{ .Values.image.psql.tag }}
           resources:
