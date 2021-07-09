@@ -16,5 +16,6 @@ install:
 	--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
 	if $(ENVIRONMENT) == test; then \
 		--set gcsProdBackupSAKey="gcp-$(GGIRCS_NAMESPACE_PREFIX)-prod-read-only-service-account-key" \
+		--set ciipDatabaseHost="cas-ciip-portal-patroni-readonly.$(CIIP_NAMESPACE_PREFIX)-$(ENVIRONMENT).svc.cluster.local" \
 	fi; \
 	cas-metabase ./helm/cas-metabase;
