@@ -1,0 +1,15 @@
+{{- if .Values.restoreFromProd.enable }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}-prod-restore
+  labels: {{ include "cas-metabase.labels" . | nindent 4 }}
+
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: netapp-block-standard
+{{- end }}
