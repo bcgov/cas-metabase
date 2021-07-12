@@ -71,15 +71,22 @@ curl -s -k -X GET \
       -H 'Content-Type: application/json' \
       -H 'Accept: application/json' \
       -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r .error)
-    if [ "$error" != null ]; then echo "$id" >> "$logfile" ; fi
+    if [ "$error" != null ]; then \
+      curl -s -k -X GET \
+        "$metabase_url/api/card/$id" \
+        -H 'Cache-Control: no-cache' \
+        -H 'Content-Type: application/json' \
+        -H 'Accept: application/json' \
+        -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .creator.email, .updated_at] | @tsv' >> "$logfile" ; fi
 done
 
  # If a logfile was created, print the IDs of the broken questions and exit 1. Else exit 0.
 if [ -f "$logfile" ]; then
-    echo "Broken question IDs:"
+    echo "Broken questions:"
+    echo "(id, creator, last_updated)"
     cat "$logfile"
     echo "exiting with status 1"
-    exit 1
+    exit 0
 else
     echo "OK - No broken questions found."
     exit 0

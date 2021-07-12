@@ -147,6 +147,49 @@ func questionIsBroken(url string, session_id string, id int, client http.Client)
 	return true
 }
 
+// Function gets all questions from metabase & returns an array containing all the question ids
+func getQuestionData(url string, session_id string, question_id int, client http.Client) string {
+	api_endpoint := fmt.Sprintf("%s/api/card/%d", url, question_id)
+
+	// Create http request & set headers
+	req, err := http.NewRequest("GET", api_endpoint, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	req.Header.Set("Cache-Control", "no-cache")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("X-Metabase-Session", session_id)
+
+	// Send http request
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Do not close response until the function is done
+	defer res.Body.Close()
+
+	// Read the response body
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		 log.Fatalln(err)
+	}
+
+	// Parse the response & return true/false depending on if the question is broken
+	var data map[string]interface{}
+	if err := json.Unmarshal(body, &data); err != nil {
+		log.Fatalln(err)
+	}
+
+	updated_at := (data["updated_at"])
+	creator := data["creator"].(map[string]interface{})["email"]
+
+	result := fmt.Sprintf("{%d, %s, %s}", question_id, creator, updated_at)
+
+	return result
+}
+
 func main() {
 	if len(os.Args) !=4 || os.Args[1] == "-h" {
 		fmt.Println("Usage: broken_questions <Metabase URL> <Username> <Password>")
@@ -155,7 +198,7 @@ func main() {
 
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	url := os.Args[1]
-	var broken_ids []int
+	var broken_data []string
 
 	// Create http client
 	client := http.Client{
@@ -171,19 +214,19 @@ func main() {
 	// For all ids in the question array, check if each question is broken.
 	for _, question_id := range question_array {
 		if questionIsBroken(url, session_id, question_id, client) {
-    	broken_ids = append(broken_ids, question_id)
+    	broken_data = append(broken_data, getQuestionData(url, session_id, question_id, client))
 		}
 	}
 
 	// Print results
-	if len(broken_ids) == 0 {
+	if len(broken_data) == 0 {
 		fmt.Println("No broken questions were found")
 		os.Exit(0)
 	}
-	if len(broken_ids) > 0 {
-		fmt.Println("Broken questions were detected, IDs: ")
-		fmt.Println(broken_ids)
-		os.Exit(1)
+	if len(broken_data) > 0 {
+		fmt.Println("Broken questions were detected {id, author, updated_at}: ")
+		fmt.Println(broken_data)
+		os.Exit(0)
 	}
 
 }
