@@ -15,8 +15,17 @@ route:
   enable: true
   host: cas-metabase-test.apps.silver.devops.gov.bc.ca
 
+restoreFromProd:
+  enable: true
+
 metabase:
   nginxSidecar:
     enable: true
     # sslTermination: false
     hostName: cas-metabase-test.apps.silver.devops.gov.bc.ca
+
+image:
+  psql:
+    repository: gcr.io/ggl-cas-storage/cas-postgres
+    pullPolicy: Always
+    tag: "0.2.1"

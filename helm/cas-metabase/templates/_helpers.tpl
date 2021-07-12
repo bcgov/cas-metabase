@@ -61,3 +61,17 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Gets the prefix of the namespace. (09269b, ... )
+*/}}
+{{- define "cas-metabase.namespacePrefix" }}
+{{- (split "-" .Release.Namespace)._0 | trim -}}
+{{- end }}
+
+{{/*
+Gets the suffix of the namespace. (-dev, -tools, ... )
+*/}}
+{{- define "cas-metabase.namespaceSuffix" }}
+{{- (split "-" .Release.Namespace)._1 | trim -}}
+{{- end }}

@@ -1,0 +1,78 @@
+{{- if .Values.restoreFromProd.enable }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}-db-pass
+  labels:
+{{ include "cas-metabase.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": "pre-upgrade,pre-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+    "helm.sh/hook-weight": "-5"
+spec:
+  suspend: true
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+{{ include "cas-metabase.labels" . | nindent 14 }}
+        spec:
+          activeDeadlineSeconds: 3600
+          restartPolicy: Never
+          containers:
+            - env:
+                - name: MB_USER
+                  value: metabase
+                - name: MB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: database-password
+                      name: cas-metabase
+                - name: MB_DATABASE
+                  value: metabase
+                - name: MB_HOST
+                  value: cas-metabase-patroni
+                - name: MB_PORT
+                  value: "5432"
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: password-superuser
+                      name: cas-metabase-patroni
+                - name: CIIP_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: ciip-readonly-db
+                - name: CIIP_HOST
+                  value: {{ .Values.ciipDatabaseHost }}
+                - name: GGIRCS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: ggircs-readonly-db
+              name: {{ template "cas-metabase.fullname" . }}-db-pass
+              image: {{ .Values.image.psql.repository }}:{{ .Values.image.psql.tag }}
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 1Gi
+                requests:
+                  cpu: 100m
+                  memory: 500Mi
+              command:
+                - /usr/bin/env
+                - bash
+                - -c
+                - |
+                  set -euo pipefail;
+                  psql -h $MB_HOST -p $MB_PORT -d $MB_DATABASE -U postgres<<EOF
+                    update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'password' || jsonb '{"password": "$(CIIP_PASSWORD)"}') where name ilike 'ciip';
+                    update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'host' || jsonb '{"host": "$(CIIP_HOST)"}') where name ilike 'ciip';
+                    update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ggircs')) - 'password' || jsonb '{"password": "$(GGIRCS_PASSWORD)"}') where name ilike 'ggircs';
+                  EOF
+{{- end }}
