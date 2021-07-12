@@ -147,7 +147,7 @@ func questionIsBroken(url string, session_id string, id int, client http.Client)
 	return true
 }
 
-// Function gets all questions from metabase & returns an array containing all the question ids
+// Function gets data relating to a broken question and returns a concatenated string of that data
 func getQuestionData(url string, session_id string, question_id int, client http.Client) string {
 	api_endpoint := fmt.Sprintf("%s/api/card/%d", url, question_id)
 
@@ -176,7 +176,7 @@ func getQuestionData(url string, session_id string, question_id int, client http
 		 log.Fatalln(err)
 	}
 
-	// Parse the response & return true/false depending on if the question is broken
+	// Parse the response & return a concatenated string of data relating to the question {id, creator, updated_at}
 	var data map[string]interface{}
 	if err := json.Unmarshal(body, &data); err != nil {
 		log.Fatalln(err)
