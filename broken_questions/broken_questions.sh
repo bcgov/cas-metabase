@@ -85,7 +85,6 @@ if [ -f "$logfile" ]; then
     echo "Broken questions:"
     echo "(id, creator, last_updated)"
     cat "$logfile"
-    echo "exiting with status 1"
     exit 0
 else
     echo "OK - No broken questions found."
