@@ -17,10 +17,10 @@ install:
 		--set gcsProdBackupSAKey="gcp-$(GGIRCS_NAMESPACE_PREFIX)-prod-read-only-service-account-key" \
 		--set ciipDatabaseHost="cas-ciip-portal-patroni-readonly.$(CIIP_NAMESPACE_PREFIX)-$(ENVIRONMENT).svc.cluster.local" \
 		--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
-		cas-metabase ./helm/cas-metabase;
+		cas-metabase ./helm/cas-metabase; \
 	else \
 		helm upgrade --install --atomic --timeout 300s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 		--set metabase.image.tag=$(GIT_SHA1) --set metabase.nginxSidecar.image.tag=$(GIT_SHA1) \
 		--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
-		cas-metabase ./helm/cas-metabase;
+		cas-metabase ./helm/cas-metabase; \
 	fi;
