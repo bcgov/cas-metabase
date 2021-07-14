@@ -69,3 +69,6 @@ metabase:
 # Generate k8s NetworkPolicy objects
 networkPolicies:
   enable: true
+
+restoreFromProd:
+  enable: false
