@@ -122,8 +122,10 @@ func questionIsBroken(url string, session_id string, id int, client http.Client)
 
 	// Send http request
 	res, err := client.Do(req)
+	log.Println(res)
 	if err != nil {
-		log.Fatalln(err)
+		// Return broken=true if query fails (ie: timeout)
+		return true
 	}
 
 	// Do not close response until the function is done

@@ -20,8 +20,8 @@ Requires 3 parameters:
 
 Uses the Metabase API to sign in & check the /api/query endpoint for an error for each question in Metabase.
 If no errors are found, an OK message is printed and this script exits 0.
-If any errors are found a logfile is created with all the IDs of questions that returned an error, the IDs are
-printed to the console and the script exits 1.
+If any errors are found a logfile is created with all the IDs of questions that returned an error,
+the values: {ID, creator, updated_at, error} are printed to the console.
 
 Options
 
@@ -65,25 +65,42 @@ curl -s -k -X GET \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.[].id' | while read -r id ; do
-    error=$(curl -s -k -X POST \
+    query=$(curl -s -k -X POST \
       "$metabase_url/api/card/$id/query" \
       -H 'Cache-Control: no-cache' \
       -H 'Content-Type: application/json' \
       -H 'Accept: application/json' \
-      -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r .error)
-    if [ "$error" != null ]; then \
-      curl -s -k -X GET \
-        "$metabase_url/api/card/$id" \
-        -H 'Cache-Control: no-cache' \
-        -H 'Content-Type: application/json' \
-        -H 'Accept: application/json' \
-        -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .creator.email, .updated_at] | @tsv' >> "$logfile" ; fi
+      -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}")
+    if jq -e . >/dev/null 2>&1 <<<"$query"; then
+      error=$(echo "$query" | jq -r ".error")
+      if [ "$error" != null ]; then \
+        error_string=$(curl -s -k -X GET \
+          "$metabase_url/api/card/$id" \
+          -H 'Cache-Control: no-cache' \
+          -H 'Content-Type: application/json' \
+          -H 'Accept: application/json' \
+          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .creator.email, .updated_at] | @tsv')
+        echo -e "$error_string $(printf '\t') $error" >> "$logfile";
+      fi
+    else
+      if echo "$query" | grep -q "504"; then
+        echo "matched";
+        curl -s -k -X GET \
+          "$metabase_url/api/card/$id" \
+          -H 'Cache-Control: no-cache' \
+          -H 'Content-Type: application/json' \
+          -H 'Accept: application/json' \
+          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .creator.email, .updated_at] + ["Error: Query Timeout"] | @tsv' >> "$logfile"
+      else
+        echo "ID: $id: Failed to parse JSON, or got false/null"
+      fi
+    fi
 done
 
  # If a logfile was created, print the IDs of the broken questions and exit 1. Else exit 0.
 if [ -f "$logfile" ]; then
     echo "Broken questions:"
-    echo "(id, creator, last_updated)"
+    echo "(id, creator, last_updated, error)"
     cat "$logfile"
     exit 0
 else
