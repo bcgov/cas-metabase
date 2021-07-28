@@ -19,7 +19,7 @@ default_args = {
     'start_date': START_DATE,
 }
 
-dag = DAG('cas_metabase_cert_renewal', schedule_interval='0 8 * * *',
+dag = DAG('cas_metabase_cert_renewal', schedule_interval='0 8 * * *', is_paused_upon_creation=False,
           default_args=default_args)
 
 cert_renewal_task = PythonOperator(
