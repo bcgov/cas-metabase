@@ -17,8 +17,7 @@ namespace = os.getenv('GGIRCS_NAMESPACE')
 
 default_args = {
     **default_dag_args,
-    'start_date': TWO_DAYS_AGO,
-    'is_paused_upon_creation': False
+    'start_date': TWO_DAYS_AGO
 }
 
 """
@@ -26,7 +25,7 @@ DAG cas_metabase_cert_renewal
 Renews site certificates for cas metabase
 """
 dag = DAG('cas_metabase_cert_renewal', schedule_interval='0 8 * * *',
-          default_args=default_args)
+          default_args=default_args, is_paused_upon_creation=False)
 
 cert_renewal_task = PythonOperator(
     python_callable=trigger_k8s_cronjob,
@@ -43,7 +42,7 @@ cert_renewal_task = PythonOperator(
 """
 
 metabase_full_backup_dag = DAG('walg_backup_metabase_full', default_args=default_args,
-                             schedule_interval='0 8 * * *')
+                             schedule_interval='0 8 * * *', is_paused_upon_creation=False)
 
 create_backup_task(metabase_full_backup_dag,
                    namespace, 'cas-metabase-patroni')
