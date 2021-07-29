@@ -42,7 +42,7 @@ cert_renewal_task = PythonOperator(
 """
 
 metabase_full_backup_dag = DAG('walg_backup_metabase_full', default_args=default_args,
-                             schedule_interval='0 8 * * *', start_date=TWO_DAYS_AGO)
+                             schedule_interval='0 8 * * *')
 
 create_backup_task(metabase_full_backup_dag,
                    namespace, 'cas-metabase-patroni')
