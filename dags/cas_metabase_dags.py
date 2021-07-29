@@ -47,4 +47,4 @@ metabase_full_backup_dag = DAG('walg_backup_metabase_full', default_args=default
                              schedule_interval='0 8 * * *', start_date=TWO_DAYS_AGO)
 
 create_backup_task(metabase_full_backup_dag,
-                   namespace, 'cas-ggircs-patroni')
+                   namespace, 'cas-metabase-patroni')
