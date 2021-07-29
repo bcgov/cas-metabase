@@ -74,8 +74,6 @@ restoreFromProd:
   enable: false
 
 download-cas-metabase-dags:
-  image:
-    tag: 69f346b134d99e9e5e6d50e16198fd4977fc3264 # pragma: allowlist secret
   airflowEndpoint: https://cas-airflow-dev.apps.silver.devops.gov.bc.ca
   dagId: fetch_and_save_dag_from_github
   helm:

@@ -18,13 +18,14 @@ namespace = os.getenv('GGIRCS_NAMESPACE')
 default_args = {
     **default_dag_args,
     'start_date': TWO_DAYS_AGO,
+    'is_paused_upon_creation': False
 }
 
 """
 DAG cas_metabase_cert_renewal
 Renews site certificates for cas metabase
 """
-dag = DAG('cas_metabase_cert_renewal', schedule_interval='0 8 * * *', is_paused_upon_creation=False,
+dag = DAG('cas_metabase_cert_renewal', schedule_interval='0 8 * * *',
           default_args=default_args)
 
 cert_renewal_task = PythonOperator(
