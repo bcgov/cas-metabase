@@ -30,3 +30,6 @@ metabase:
     caServerKey: url
     hostName: cas-metabase.nrs.gov.bc.ca
     renewalDays: 305
+
+download-cas-metabase-dags:
+  airflowEndpoint: https://cas-airflow-prod.apps.silver.devops.gov.bc.ca

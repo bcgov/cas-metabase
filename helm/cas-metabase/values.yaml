@@ -72,3 +72,9 @@ networkPolicies:
 
 restoreFromProd:
   enable: false
+
+download-cas-metabase-dags:
+  airflowEndpoint: https://cas-airflow-dev.apps.silver.devops.gov.bc.ca
+  dagId: fetch_and_save_dag_from_github
+  helm:
+    hook: "pre-install,pre-upgrade"
