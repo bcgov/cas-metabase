@@ -11,13 +11,13 @@ from datetime import datetime, timedelta
 from airflow import DAG
 import os
 
-START_DATE = datetime.now() - timedelta(days=2)
+TWO_DAYS_AGO = datetime.now() - timedelta(days=2)
 
 namespace = os.getenv('GGIRCS_NAMESPACE')
 
 default_args = {
     **default_dag_args,
-    'start_date': START_DATE,
+    'start_date': TWO_DAYS_AGO,
 }
 
 """
@@ -40,8 +40,6 @@ cert_renewal_task = PythonOperator(
 #                                                                             #
 ###############################################################################
 """
-
-TWO_DAYS_AGO = datetime.now() - timedelta(days=2)
 
 metabase_full_backup_dag = DAG('walg_backup_metabase_full', default_args=default_args,
                              schedule_interval='0 8 * * *', start_date=TWO_DAYS_AGO)
