@@ -33,3 +33,8 @@ metabase:
 
 download-cas-metabase-dags:
   airflowEndpoint: https://cas-airflow-prod.apps.silver.devops.gov.bc.ca
+
+metabaseHPA:
+  enable: true
+  minReplicas: 2
+  maxReplicas: 5

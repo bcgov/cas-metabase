@@ -5,6 +5,8 @@ metadata:
   name: {{ template "cas-metabase.fullname" . }}
   labels:
 {{ include "cas-metabase.labels" . | indent 4 }}
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin
 
 spec:
   host: {{ .Values.route.host }}
