@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cas-metabase-hpa
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: cas-metabase
+    apiVersion: apps/v1
+    subresource: scale
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
