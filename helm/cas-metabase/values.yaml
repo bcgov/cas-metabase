@@ -44,7 +44,7 @@ metabase:
       cpu: 1
       memory: 4Gi
     requests:
-      cpu: 50m
+      cpu: 250m
       memory: 2Gi
   podLabels:
     app.kubernetes.io/component: app
