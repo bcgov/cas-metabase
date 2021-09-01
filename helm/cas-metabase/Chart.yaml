@@ -2,8 +2,8 @@ apiVersion: v2
 name: cas-metabase
 description: A Helm chart for the CAS Metabase instance
 type: application
-version: 0.2.9
-appVersion: 0.40.0
+version: 0.2.10
+appVersion: 0.40.3.1
 dependencies:
   - name: cas-postgres
     version: 0.8.0
@@ -12,6 +12,6 @@ dependencies:
     version: 0.12.1
     repository: file://../metabase
   - name: cas-airflow-dag-trigger
-    version: 1.0.6
+    version: 1.0.7
     repository: https://bcgov.github.io/cas-airflow
     alias: download-cas-metabase-dags
