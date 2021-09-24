@@ -3,6 +3,27 @@ entries:
   cas-metabase:
   - apiVersion: v2
     appVersion: 0.40.3.1
+    created: "2021-09-24T20:04:49.71927248Z"
+    dependencies:
+    - name: cas-postgres
+      repository: https://bcgov.github.io/cas-postgres/
+      version: 0.8.0
+    - name: metabase
+      repository: file://../metabase
+      version: 0.12.1
+    - alias: download-cas-metabase-dags
+      name: cas-airflow-dag-trigger
+      repository: https://bcgov.github.io/cas-airflow
+      version: 1.0.7
+    description: A Helm chart for the CAS Metabase instance
+    digest: 40aedb9299fc47096343e755c64841c7a4b21ebf208e02d16f2fffd15702dcb4
+    name: cas-metabase
+    type: application
+    urls:
+    - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.2.11/cas-metabase-0.2.11.tgz
+    version: 0.2.11
+  - apiVersion: v2
+    appVersion: 0.40.3.1
     created: "2021-09-01T18:46:38.771651646Z"
     dependencies:
     - name: cas-postgres
@@ -171,4 +192,22 @@ entries:
     urls:
     - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.1.0/cas-metabase-0.1.0.tgz
     version: 0.1.0
-generated: "2021-09-01T18:46:38.772738435Z"
+  metabase:
+  - apiVersion: v1
+    appVersion: v0.36.3
+    created: "2021-09-24T20:04:49.930513312Z"
+    description: The easy, open source way for everyone in your company to ask questions
+      and learn from data.
+    digest: e2429743066a9c46c94244c5decae69cfc2571ffd3f0643692b9bf98e66887c4
+    home: http://www.metabase.com/
+    icon: http://www.metabase.com/images/logo.svg
+    maintainers:
+    - email: phamminhthanh69@gmail.com
+      name: pmint93
+    name: metabase
+    sources:
+    - https://github.com/metabase/metabase
+    urls:
+    - https://github.com/bcgov/cas-metabase/releases/download/metabase-0.12.1/metabase-0.12.1.tgz
+    version: 0.12.1
+generated: "2021-09-24T20:04:49.930686321Z"
