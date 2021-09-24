@@ -15,3 +15,7 @@ dependencies:
     version: 1.0.7
     repository: https://bcgov.github.io/cas-airflow
     alias: download-cas-metabase-dags
+  - name: cas-airflow-dag-trigger
+    version: 1.0.7
+    repository: https://bcgov.github.io/cas-airflow
+    alias: prod-test-restore

@@ -37,3 +37,11 @@ metabaseHPA:
   enable: true
   minReplicas: 2
   maxReplicas: 5
+
+prod-test-restore:
+  image:
+    tag: 34c1edc251b1ed4f91eef5a39ac4919135af68c9 # pragma: allowlist secret
+  airflowEndpoint: https://cas-airflow-dev.apps.silver.devops.gov.bc.ca
+  dagId: cas_metabase_prod_test_restore
+  helm:
+    hook: "post-install"
