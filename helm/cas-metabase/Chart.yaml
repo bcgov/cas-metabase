@@ -19,3 +19,4 @@ dependencies:
     version: 1.0.7
     repository: https://bcgov.github.io/cas-airflow
     alias: prod-test-restore
+    condition: prod-test-restore.enable

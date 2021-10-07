@@ -1,4 +1,4 @@
-{{- if .Values.restoreFromProd.enable }}
+{{- if index .Values "prod-test-restore" "enable" }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
