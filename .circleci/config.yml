@@ -39,7 +39,7 @@ jobs:
             docker build --cache-from=<< parameters.image_name >>
             -t << parameters.image_name >>:latest
             -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:latest
-            -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:v0.36.6
+            -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:v0.41.0
             -t gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
             -f << parameters.dockerfile >>
             .
@@ -76,7 +76,7 @@ jobs:
       # running the docker image with a random userID
       - run: |
           docker run -d -p 3000:3000 -u 999999:0 gcr.io/${GOOGLE_PROJECT_ID}/<< parameters.image_name >>:<< parameters.image_tag >>
-          sleep 30s
+          sleep 60s
           curl --retry 10 --retry-connrefused --fail http://localhost:3000/api/health
 
 workflows:
