@@ -8,5 +8,8 @@ dependencies:
 - name: cas-airflow-dag-trigger
   repository: https://bcgov.github.io/cas-airflow
   version: 1.0.7
-digest: sha256:af8c80798ff56bfa1d893acc255c0faed12d03baaa479bcd867d5ffd96e55275
-generated: "2021-09-01T10:09:06.250875685-07:00"
+- name: cas-airflow-dag-trigger
+  repository: https://bcgov.github.io/cas-airflow
+  version: 1.0.7
+digest: sha256:1878dbfefd2ba7683316d45d2a3aa8322644b5cffe76bea76651361b49015913
+generated: "2021-10-07T08:32:16.325689925-07:00"
