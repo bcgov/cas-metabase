@@ -15,9 +15,6 @@ route:
   enable: true
   host: cas-metabase-test.apps.silver.devops.gov.bc.ca
 
-restoreFromProd:
-  enable: true
-
 metabase:
   nginxSidecar:
     enable: true
@@ -39,6 +36,7 @@ metabaseHPA:
   maxReplicas: 5
 
 prod-test-restore:
+  enable: true
   image:
     tag: 34c1edc251b1ed4f91eef5a39ac4919135af68c9 # pragma: allowlist secret
   airflowEndpoint: https://cas-airflow-dev.apps.silver.devops.gov.bc.ca
