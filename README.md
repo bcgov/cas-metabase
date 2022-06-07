@@ -2,6 +2,8 @@
 Cas Docker Metabase image
 =========================
 
+![Lifecycle:Stable](https://img.shields.io/badge/Lifecycle-Stable-97ca00)
+
 This is a docker image based on the official metabase docker image: https://hub.docker.com/r/metabase/metabase
 
 `run_metabase.sh` has been modified to support running with a random user ID instead of root.
