@@ -79,7 +79,7 @@ curl -s -k -X GET \
           -H 'Cache-Control: no-cache' \
           -H 'Content-Type: application/json' \
           -H 'Accept: application/json' \
-          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .creator.email, .updated_at] | @tsv')
+          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .collection_id, .creator.email, .updated_at] | @tsv')
         echo -e "$error_string $(printf '\t') $error" >> "$logfile";
       fi
     else
@@ -90,7 +90,7 @@ curl -s -k -X GET \
           -H 'Cache-Control: no-cache' \
           -H 'Content-Type: application/json' \
           -H 'Accept: application/json' \
-          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .creator.email, .updated_at] + ["Error: Query Timeout"] | @tsv' >> "$logfile"
+          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .collection_id, .creator.email, .updated_at] + ["Error: Query Timeout"] | @tsv' >> "$logfile"
       else
         echo "ID: $id: Failed to parse JSON, or got false/null"
       fi
