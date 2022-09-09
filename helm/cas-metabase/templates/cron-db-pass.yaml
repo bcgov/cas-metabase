@@ -55,6 +55,13 @@ spec:
                     secretKeyRef:
                       key: password
                       name: ggircs-readonly-db
+                - name: CIF_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: cif-db
+                - name: CIF_HOST
+                  value: {{ .Values.cifDatabaseHost }}
               name: {{ template "cas-metabase.fullname" . }}-db-pass
               image: {{ .Values.image.psql.repository }}:{{ .Values.image.psql.tag }}
               resources:
@@ -74,5 +81,7 @@ spec:
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'password' || jsonb '{"password": "$(CIIP_PASSWORD)"}') where name ilike 'ciip';
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'host' || jsonb '{"host": "$(CIIP_HOST)"}') where name ilike 'ciip';
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ggircs')) - 'password' || jsonb '{"password": "$(GGIRCS_PASSWORD)"}') where name ilike 'ggircs';
+                    update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'cif')) - 'password' || jsonb '{"password": "$(CIF_PASSWORD)"}') where name ilike 'cif';
+                    update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'cif')) - 'host' || jsonb '{"host": "$(CIF_HOST)"}') where name ilike 'cif';
                   EOF
 {{- end }}
