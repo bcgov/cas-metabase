@@ -29,8 +29,8 @@ cas-postgres:
 metabase:
   replicaCount: 2
   image:
-    repository: gcr.io/ggl-cas-storage/metabase
-    tag: latest
+    repository: metabase/metabase
+    tag: 0.44.2
   database:
     type: postgres
     host: cas-metabase-patroni
