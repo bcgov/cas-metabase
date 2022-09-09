@@ -30,7 +30,7 @@ metabase:
   replicaCount: 2
   image:
     repository: metabase/metabase
-    tag: 0.44.2
+    tag: v0.44.2
   database:
     type: postgres
     host: cas-metabase-patroni
