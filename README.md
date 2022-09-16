@@ -14,7 +14,7 @@ This will output a list of broken questions both in your terminal, and (if there
 
 Example output:
 
-id | collection_id |   author  |    updated_at       |         error
-1          1          Joey Joe | 1970-01-01 00:00:01 | No such field "missing_id"
+id | collection_id |   author   |    updated_at       |         error
+1  |       1       |  Joey Joe  | 1970-01-01 00:00:01 | No such field "missing_id"
 
 It is a good idea to run this script whenever upgrading metabase or making changes to the underlying schema to see what effect it may have on the metabase end users. It is also helpful to run it periodically and contact the authors of broken questions to see if those questions are still useful and should be fixed or if they can be cleaned up / archived.
