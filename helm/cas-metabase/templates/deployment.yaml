@@ -43,9 +43,6 @@ spec:
               secretKeyRef:
                 name: {{ or .Values.database.existingSecret (printf "%s-database" (include "cas-metabase.fullname" .)) }}
                 key: {{ or .Values.database.existingSecretPasswordKey "password" }}
-            {{- end }}
-          {{- end }}
-          {{- end }}
           {{- if .Values.pluginsDirectory }}
           - name: MB_PLUGINS_DIR
             value: {{ .Values.pluginsDirectory | quote }}
