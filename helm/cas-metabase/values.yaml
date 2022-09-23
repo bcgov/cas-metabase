@@ -26,45 +26,47 @@ cas-postgres:
   gcs:
     bucketSuffix:
 
-metabase:
-  replicaCount: 2
-  image:
-    repository: metabase/metabase
-    tag: v0.44.2
-  database:
-    type: postgres
-    host: cas-metabase-patroni
-    port: 5432
-    dbname: metabase
-    existingSecret: cas-metabase
-    existingSecretUsernameKey: database-user
-    existingSecretPasswordKey: database-password
-  resources:
-    limits:
-      cpu: 1
-      memory: 4Gi
-    requests:
-      cpu: 250m
-      memory: 2Gi
-  podLabels:
-    app.kubernetes.io/component: app
+replicaCount: 2
+image:
+  repository: metabase/metabase
+  tag: v0.44.2
+  pullPolicy: Always
+database:
+  type: postgres
+  host: cas-metabase-patroni
+  port: 5432
+  dbname: metabase
+  existingSecret: cas-metabase
+  existingSecretUsernameKey: database-user
+  existingSecretPasswordKey: database-password
+resources:
+  limits:
+    cpu: 1
+    memory: 4Gi
+  requests:
+    cpu: 250m
+    memory: 2Gi
+podLabels:
+  app.kubernetes.io/component: app
 
-  nginxSidecar:
-    enable: false
-    image:
-      repository: gcr.io/ggl-cas-storage/nginx
-      tag: ~ # will be set to the commit sha1 by the make install command
-      pullPolicy: IfNotPresent
-    # set to false to deploy the application with an insecure route,
-    # and issue an SSL certificate using acme.sh
-    sslTermination: true
-    # If provided, the acme issue/renewal scripts will use a custom server
-    # Otherwise it defaults to Let's Encrypt
-    caServerSecret: ~
-    caServerKey: ~
-    caAccountEmail: ggircs@gov.bc.ca
-    storageClassName: netapp-file-standard
-    renewalDays: 60
+# Config Jetty web server
+listen:
+  host: "0.0.0.0"
+  port: 3000
+
+service:
+  externalPort: 80
+  internalPort: 3000
+
+livenessProbe:
+  initialDelaySeconds: 120
+  timeoutSeconds: 30
+  failureThreshold: 6
+
+readinessProbe:
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+  periodSeconds: 5
 
 # Generate k8s NetworkPolicy objects
 networkPolicies:

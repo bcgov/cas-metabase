@@ -22,15 +22,6 @@ route:
   enable: true
   host: cas-metabase.nrs.gov.bc.ca
 
-metabase:
-  nginxSidecar:
-    enable: true
-    # Use Entrust ACME server. This secret is created by cas-pipeline
-    caServerSecret: cas-acme-url
-    caServerKey: url
-    hostName: cas-metabase.nrs.gov.bc.ca
-    renewalDays: 305
-
 download-cas-metabase-dags:
   airflowEndpoint: https://cas-airflow-prod.apps.silver.devops.gov.bc.ca
 

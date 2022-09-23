@@ -21,19 +21,6 @@ default_args = {
 }
 
 """
-DAG cas_metabase_cert_renewal
-Renews site certificates for cas metabase
-"""
-dag = DAG('cas_metabase_cert_renewal', schedule_interval='0 8 * * *',
-          default_args=default_args, is_paused_upon_creation=False)
-
-cert_renewal_task = PythonOperator(
-    python_callable=trigger_k8s_cronjob,
-    task_id='cert_renewal',
-    op_args=['cas-metabase-acme-renewal', namespace],
-    dag=dag)
-
-"""
 ###############################################################################
 #                                                                             #
 # DAG triggering the wal-g backup job                                         #
