@@ -12,6 +12,7 @@ install:
 		helm upgrade --install --atomic --wait-for-jobs --timeout 300s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 		--set gcsProdBackupSAKey="gcp-$(GGIRCS_NAMESPACE_PREFIX)-prod-read-only-service-account-key" \
 		--set ciipDatabaseHost="cas-ciip-portal-patroni-readonly.$(CIIP_NAMESPACE_PREFIX)-$(ENVIRONMENT).svc.cluster.local" \
+		--set cifDatabaseHost="cas-cif-postgres-replicas.$(CIF_NAMESPACE_PREFIX)-$(ENVIRONMENT).svc.cluster.local" \
 		--set download-cas-metabase-dags.dagConfiguration="$$dagConfig" \
 		--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
 		cas-metabase ./helm/cas-metabase; \

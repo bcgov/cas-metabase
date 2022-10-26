@@ -32,8 +32,8 @@ metabaseHPA:
 prod-test-restore:
   enable: true
   image:
-    tag: 34c1edc251b1ed4f91eef5a39ac4919135af68c9 # pragma: allowlist secret
-  airflowEndpoint: https://cas-airflow-dev.apps.silver.devops.gov.bc.ca
+    tag: 1.0.8
+  airflowEndpoint: https://cas-airflow-test.apps.silver.devops.gov.bc.ca
   dagId: cas_metabase_prod_test_restore
   helm:
     hook: "post-install"
