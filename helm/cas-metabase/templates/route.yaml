@@ -11,7 +11,7 @@ metadata:
 spec:
   host: {{ .Values.route.host }}
   port:
-    targetPort: metabase
+    targetPort: {{ template "cas-metabase.fullname" . }}
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
