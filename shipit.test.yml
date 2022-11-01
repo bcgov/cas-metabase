@@ -4,7 +4,7 @@ deploy:
   override:
     - git submodule update --init
     - make install:
-        timeout: 300
+        timeout: 2000 # just a little over the 1800s timing out the helm release
 review:
   checklist: []
 
@@ -15,13 +15,10 @@ tasks:
     steps:
       - ./broken_questions/broken_questions.sh $METABASE_PATH $METABASE_API_USER $METABASE_API_PASS
     variables:
-    -
-      name: METABASE_PATH
-      title: URL of the Metabase instance
-      default: https://cas-metabase-test.apps.silver.devops.gov.bc.ca
-    -
-      name: METABASE_API_USER
-      title: The username of the Metabase user used to access the API
-    -
-      name: METABASE_API_PASS
-      title: The password for the Metabase user used to access the API
+      - name: METABASE_PATH
+        title: URL of the Metabase instance
+        default: https://cas-metabase-test.apps.silver.devops.gov.bc.ca
+      - name: METABASE_API_USER
+        title: The username of the Metabase user used to access the API
+      - name: METABASE_API_PASS
+        title: The password for the Metabase user used to access the API

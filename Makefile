@@ -9,7 +9,7 @@ install:
 	dagConfig=$$(echo '{"org": "bcgov", "repo": "cas-metabase", "ref": "$(GIT_SHA1)", "path": "dags/cas_metabase_dags.py"}' | base64 -w0); \
 	helm dep up ./helm/cas-metabase; \
 	if [[ $(ENVIRONMENT) == test ]]; then \
-		helm upgrade --install --atomic --wait-for-jobs --timeout 300s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
+		helm upgrade --install --atomic --wait-for-jobs --timeout 1800s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 		--set gcsProdBackupSAKey="gcp-$(GGIRCS_NAMESPACE_PREFIX)-prod-read-only-service-account-key" \
 		--set ciipDatabaseHost="cas-ciip-portal-patroni-readonly.$(CIIP_NAMESPACE_PREFIX)-$(ENVIRONMENT).svc.cluster.local" \
 		--set cifDatabaseHost="cas-cif-postgres-replicas.$(CIF_NAMESPACE_PREFIX)-$(ENVIRONMENT).svc.cluster.local" \
@@ -17,7 +17,7 @@ install:
 		--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
 		cas-metabase ./helm/cas-metabase; \
 	else \
-		helm upgrade --install --atomic --wait-for-jobs --timeout 300s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
+		helm upgrade --install --atomic --wait-for-jobs --timeout 1800s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 		--set download-cas-metabase-dags.dagConfiguration="$$dagConfig" \
 		--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
 		cas-metabase ./helm/cas-metabase; \
