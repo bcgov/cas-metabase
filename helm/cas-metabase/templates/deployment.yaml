@@ -16,6 +16,33 @@ spec:
     spec:
       imagePullSecrets:
         - name: dockerhub-registry
+{{- if index .Values "prod-test-restore" "enable" }}
+      initContainers:
+        - name: {{ .Chart.Name }}-wait-for-prod-restore
+          image: bash
+          imagePullPolicy: Always
+          command:
+            - bash
+            - -c
+            - |
+              set -euo pipefail;
+
+              while true; do
+                echo 'Looking for restore flag in /home/postgres...'
+                if [ -f /home/postgres/restore_completed ]; then
+                  echo 'Restore from prod completed!'
+                  exit 0
+                fi;
+                if [ -f /home/postgres/restore_failed ]; then
+                  echo 'Restore from prod failed. See cronjob logs for more details.'
+                  exit 1
+                fi;
+                sleep 2;
+              done;
+          volumeMounts:
+            - mountPath: /home/postgres/
+              name: prod-restore-flag
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -70,6 +97,11 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           resources: {{ toYaml .Values.resources | nindent 12 }}
-
+{{- if index .Values "prod-test-restore" "enable" }}
+      volumes:
+        - name: prod-restore-flag
+          persistentVolumeClaim:
+            claimName: {{ template "cas-metabase.fullname" . }}-prod-restore-flag
+{{- end }}
 
 

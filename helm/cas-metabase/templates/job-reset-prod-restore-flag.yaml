@@ -1,0 +1,44 @@
+{{- if index .Values "prod-test-restore" "enable" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}-reset-prod-restore-flag
+  labels:
+{{ include "cas-metabase.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  parallelism: 1
+  completions: 1
+  backoffLimit: 10
+  template:
+    metadata:
+      name: {{ template "cas-metabase.fullname" . }}-reset-prod-restore-flag
+      labels: {{ include "cas-metabase.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ template "cas-metabase.fullname" . }}-reset-prod-restore-flag
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          image: bash
+          command:
+            - bash
+            - -c
+            - |
+              set -euxo pipefail;
+              rm /home/prodRestoreFlag/*
+          volumeMounts:
+            - mountPath: /home/prodRestoreFlag/
+              name: prod-restore-flag
+      restartPolicy: Never
+      activeDeadlineSeconds: 3600
+      volumes:
+        - name: prod-restore-flag
+          persistentVolumeClaim:
+            claimName: {{ template "cas-metabase.fullname" . }}-prod-restore-flag
+{{- end }}
