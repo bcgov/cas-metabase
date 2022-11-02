@@ -36,4 +36,4 @@ prod-test-restore:
   airflowEndpoint: https://cas-airflow-test.apps.silver.devops.gov.bc.ca
   dagId: cas_metabase_prod_test_restore
   helm:
-    hook: "post-install"
+    hook: ""
