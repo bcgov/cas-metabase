@@ -16,6 +16,7 @@ spec:
     spec:
       imagePullSecrets:
         - name: dockerhub-registry
+{{- if index .Values "prod-test-restore" "enable" }}
       initContainers:
         - name: {{ .Chart.Name }}-wait-for-prod-restore
           image: bash
@@ -38,6 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /home/postgres/
               name: prod-restore
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -92,9 +94,11 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           resources: {{ toYaml .Values.resources | nindent 12 }}
+{{- if index .Values "prod-test-restore" "enable" }}
       volumes:
         - name: prod-restore
           persistentVolumeClaim:
             claimName: {{ template "cas-metabase.fullname" . }}-prod-restore
+{{- end }}
 
 
