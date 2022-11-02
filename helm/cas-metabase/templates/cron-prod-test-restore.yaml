@@ -105,6 +105,11 @@ spec:
 
                   chmod 0600 .pgpass
                   echo RESTORING TO TEST...
+                  
+                  echo "  creating citext extension..."
+                  PGPASSFILE=".pgpass" psql --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres -c 'CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;'
+
+                  echo "  restoring..."
                   pg_dump --no-password --format=custom --schema=public metabase |
                   PGPASSFILE=".pgpass" pg_restore --schema=public --clean --if-exists --exit-on-error --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres
 
