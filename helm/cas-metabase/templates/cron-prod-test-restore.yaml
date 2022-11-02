@@ -105,8 +105,8 @@ spec:
 
                   chmod 0600 .pgpass
                   echo RESTORING TO TEST...
-                  pg_dump --no-password --format=custom metabase |
-                  PGPASSFILE=".pgpass" pg_restore --clean --if-exists --exit-on-error --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres
+                  pg_dump --no-password --format=custom --schema=public metabase |
+                  PGPASSFILE=".pgpass" pg_restore --schema=public --clean --if-exists --exit-on-error --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres
 
                   if [ $? -eq 0 ]; then
                     touch /home/prodRestoreFlag/restore_completed
