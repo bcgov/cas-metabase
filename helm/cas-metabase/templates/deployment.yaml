@@ -16,6 +16,28 @@ spec:
     spec:
       imagePullSecrets:
         - name: dockerhub-registry
+      initContainers:
+        - name: {{ .Chart.Name }}-wait-for-prod-restore
+          image: bash
+          imagePullPolicy: Always
+          command:
+            - bash
+            - -c
+            - |
+              set -euo pipefail;
+
+              while true; do
+                if [ -f /home/postgres/restore_completed ]; then
+                  exit 0
+                fi;
+                if [ -f /home/postgres/restore_failed ]; then
+                  exit 1
+                fi;
+                sleep 2;
+              done;
+          volumeMounts:
+            - mountPath: /home/postgres/
+              name: prod-restore
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -70,6 +92,9 @@ spec:
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
           resources: {{ toYaml .Values.resources | nindent 12 }}
-
+      volumes:
+        - name: prod-restore
+          persistentVolumeClaim:
+            claimName: {{ template "cas-metabase.fullname" . }}-prod-restore
 
 
