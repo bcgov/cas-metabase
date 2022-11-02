@@ -107,7 +107,7 @@ spec:
                   echo RESTORING TO TEST...
                   
                   echo "  creating citext extension..."
-                  PGPASSFILE=".pgpass" psql --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres -c 'CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;'
+                  PGPASSFILE=".pgpass" psql --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres -c 'DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;'
 
                   echo "  restoring..."
                   pg_dump --no-password --format=custom --schema=public metabase |
