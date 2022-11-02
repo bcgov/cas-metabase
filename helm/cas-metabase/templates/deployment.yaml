@@ -43,7 +43,7 @@ spec:
               done;
           volumeMounts:
             - mountPath: /home/postgres/
-              name: prod-restore
+              name: prod-restore-flag
 {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -101,9 +101,9 @@ spec:
           resources: {{ toYaml .Values.resources | nindent 12 }}
 {{- if index .Values "prod-test-restore" "enable" }}
       volumes:
-        - name: prod-restore
+        - name: prod-restore-flag
           persistentVolumeClaim:
-            claimName: {{ template "cas-metabase.fullname" . }}-prod-restore
+            claimName: {{ template "cas-metabase.fullname" . }}-prod-restore-flag
 {{- end }}
 
 

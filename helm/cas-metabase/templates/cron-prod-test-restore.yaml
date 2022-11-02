@@ -109,15 +109,20 @@ spec:
                   PGPASSFILE=".pgpass" pg_restore --clean --if-exists --exit-on-error --no-password -d $MB_DATABASE -h $MB_HOST -p $MB_PORT -U postgres
 
                   if [ $? -eq 0 ]; then
-                    touch /home/postgres/restore_completed
+                    touch /home/prodRestoreFlag/restore_completed
                   else
-                    touch /home/postgres/restore_failed
+                    touch /home/prodRestoreFlag/restore_failed
                   fi
               volumeMounts:
                 - mountPath: /home/postgres/
                   name: prod-restore
+                - mountPath: /home/prodRestoreFlag/
+                  name: prod-restore-flag
           volumes:
             - name: prod-restore
               persistentVolumeClaim:
                 claimName: {{ template "cas-metabase.fullname" . }}-prod-restore
+            - name: prod-restore-flag
+              persistentVolumeClaim:
+                claimName: {{ template "cas-metabase.fullname" . }}-prod-restore-flag
 {{- end }}
