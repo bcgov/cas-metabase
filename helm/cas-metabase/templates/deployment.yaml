@@ -31,12 +31,10 @@ spec:
                 echo 'Looking for restore flag in /home/postgres...'
                 if [ -f /home/postgres/restore_completed ]; then
                   echo 'Restore from prod completed!'
-                  rm /home/postgres/restore_completed
                   exit 0
                 fi;
                 if [ -f /home/postgres/restore_failed ]; then
                   echo 'Restore from prod failed. See cronjob logs for more details.'
-                  rm /home/postgres/restore_failed
                   exit 1
                 fi;
                 sleep 2;
