@@ -20,8 +20,8 @@ Requires 3 parameters:
 
 Uses the Metabase API to sign in & check the /api/query endpoint for an error for each question in Metabase.
 If no errors are found, an OK message is printed and this script exits 0.
-If any errors are found a logfile is created with all the IDs of questions that returned an error,
-the values: {ID, creator, updated_at, error} are printed to the console.
+If any errors are found logfile is created with metadata for the questions that returned an error.
+{ID, name, creator, updated_at, last_run_date, dashboard_count, error} is also printed to the console.
 
 Options
 
@@ -54,11 +54,19 @@ session_id=$(curl -v -k -X POST \
 # Trim leading & trailing doublequotes from id
 session_id=$(sed -e 's/^"//' -e 's/"$//' <<<"$session_id")
 
-# create a logfile name with date/time
+# create a temp templog
+templog="temp_log.txt"
+
+# create a templog name with date/time
 logfile="log_$(date +"%Y_%m_%d_%T").txt"
 
+# count of broken questions
+declare -i broken_count=0
+
+echo "Checking for broken questions..."
+
 # Get the ids of all questions in metabase & check the /query endpoint for an error
-# Print broken question results to logfile
+# Print broken question results to templog
 curl -s -k -X GET \
   "$metabase_url/api/card" \
   -H 'Cache-Control: no-cache' \
@@ -79,29 +87,34 @@ curl -s -k -X GET \
           -H 'Cache-Control: no-cache' \
           -H 'Content-Type: application/json' \
           -H 'Accept: application/json' \
-          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .collection_id, .creator.email, .updated_at] | @tsv')
-        echo -e "$error_string $(printf '\t') $error" >> "$logfile";
+          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .name, .collection_id // "null", .creator.email, .updated_at, .last_query_start // "never", .dashboard_count] | @tsv')
+        echo -e "$error_string $(printf '\t') $error" >> "$templog";
+        broken_count+=1
+        echo -en "\rBroken questions found: $broken_count"
       fi
     else
       if echo "$query" | grep -q "504"; then
-        echo "matched";
         curl -s -k -X GET \
           "$metabase_url/api/card/$id" \
           -H 'Cache-Control: no-cache' \
           -H 'Content-Type: application/json' \
           -H 'Accept: application/json' \
-          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .collection_id, .creator.email, .updated_at] + ["Error: Query Timeout"] | @tsv' >> "$logfile"
+          -H "X-Metabase-Session: ${session_id//[$'\t\r\n ']}" | jq -r '.|[.id, .name, .collection_id // "null", .creator.email, .updated_at, .last_query_start // "never", .dashboard_count] + ["Error: Query Timeout"] | @tsv' >> "$templog"
+        broken_count+=1
+        echo -en "\rBroken questions found: $broken_count"
       else
         echo "ID: $id: Failed to parse JSON, or got false/null"
       fi
     fi
 done
 
- # If a logfile was created, print the IDs of the broken questions and exit 1. Else exit 0.
-if [ -f "$logfile" ]; then
+ # If a templog was created, print the IDs of the broken questions and exit 1. Else exit 0.
+if [ -f "$templog" ]; then
     echo "Broken questions:"
-    echo "(id, creator, last_updated, error)"
-    cat "$logfile"
+    # Prettify output of templog to a timestamped logfile
+    sed -i "1iid\tname\tcollection_id\tcreator_email\tupdated_at\tlast_run\tdashboard_count" "$templog"
+    cat "$templog" | sed -e 's/  Position:.*//g' | sed -e 's/  Hint:.*//g' | column -t -s$'\t' >> "$logfile"
+    cat "$templog" | sed -e 's/  Position:.*//g' | sed -e 's/  Hint:.*//g' | column -t -s$'\t'
     exit 0
 else
     echo "OK - No broken questions found."
