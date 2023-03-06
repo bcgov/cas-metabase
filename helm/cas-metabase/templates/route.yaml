@@ -15,7 +15,9 @@ metadata:
   name: {{ template "cas-metabase.fullname" . }}
   labels:
 {{ include "cas-metabase.labels" . | nindent 4 }}
-    certbot-managed: {{ .Values.route.certbotManaged }}
+    {{- if .Values.route.certbotManaged }}
+    certbot-managed: {{ .Values.route.certbotManaged | quote }}
+    {{- end }}
   annotations:
     haproxy.router.openshift.io/balance: roundrobin
 
