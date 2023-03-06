@@ -85,3 +85,7 @@ download-cas-metabase-dags:
   dagId: fetch_and_save_dag_from_github
   helm:
     hook: "pre-install,pre-upgrade"
+
+certbot:
+  certbot:
+    email: ggircs@gov.bc.ca
