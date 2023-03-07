@@ -87,5 +87,7 @@ download-cas-metabase-dags:
     hook: "pre-install,pre-upgrade"
 
 certbot:
+  image:
+    pullPolicy: IfNotPresent
   certbot:
     email: ggircs@gov.bc.ca
