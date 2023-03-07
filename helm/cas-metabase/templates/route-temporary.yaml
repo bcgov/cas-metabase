@@ -1,0 +1,22 @@
+{{- if .Values.route.enableTemporary }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ template "cas-metabase.fullname" . }}-temporary
+  labels:
+{{ include "cas-metabase.labels" . | indent 4 }}
+  annotations:
+    haproxy.router.openshift.io/balance: roundrobin
+
+spec:
+  host: {{ .Values.route.temporaryHost }}
+  port:
+    targetPort: {{ template "cas-metabase.fullname" . }}
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name:  {{ template "cas-metabase.fullname" . }}
+    weight: 100
+{{- end }}
