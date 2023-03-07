@@ -22,8 +22,6 @@ route:
   enable: true
   host: cas-metabase.nrs.gov.bc.ca
   certbotManaged: true
-  enableTemporary: true
-  temporaryHost: cas-metabase-prod.apps.silver.devops.gov.bc.ca
 
 certbot:
   certbot:
