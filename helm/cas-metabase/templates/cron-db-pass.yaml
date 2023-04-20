@@ -11,7 +11,7 @@ metadata:
     "helm.sh/hook-weight": "-5"
 spec:
   suspend: true
-  schedule: "* * * * *"
+  schedule: "0 * * * *"
   successfulJobsHistoryLimit: 1
   jobTemplate:
     spec:
