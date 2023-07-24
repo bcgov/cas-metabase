@@ -29,7 +29,7 @@ cas-postgres:
 replicaCount: 2
 image:
   repository: metabase/metabase
-  tag: v0.44.2
+  tag: v0.46.6.1
   pullPolicy: Always
 database:
   type: postgres
