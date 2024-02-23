@@ -94,5 +94,5 @@ certbot:
 
 terraform-bucket-provision:
   terraform:
-    namespace_apps: ["mb-backups"]
+    namespace_apps: '["mb-backups"]'
     workspace: metabase
