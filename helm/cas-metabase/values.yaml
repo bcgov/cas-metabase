@@ -29,7 +29,7 @@ cas-postgres:
 replicaCount: 2
 image:
   repository: metabase/metabase
-  tag: v0.46.6.1
+  tag: v0.48.6
   pullPolicy: Always
 database:
   type: postgres
@@ -94,5 +94,5 @@ certbot:
 
 terraform-bucket-provision:
   terraform:
-    namespace_apps: ["mb-backups"]
+    namespace_apps: '["mb-backups"]'
     workspace: metabase
