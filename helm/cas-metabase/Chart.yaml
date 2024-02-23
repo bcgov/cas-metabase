@@ -6,7 +6,7 @@ version: 0.3.8
 appVersion: 0.46.6.1
 dependencies:
   - name: cas-postgres
-    version: 0.8.4
+    version: 0.9.2
     repository: https://bcgov.github.io/cas-postgres/
   - name: cas-airflow-dag-trigger
     version: 1.0.8
