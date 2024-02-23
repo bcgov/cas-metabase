@@ -91,3 +91,8 @@ certbot:
     pullPolicy: IfNotPresent
   certbot:
     email: ggircs@gov.bc.ca
+
+terraform-bucket-provision:
+  terraform:
+    namespace_apps: ["mb-backups"]
+    workspace: metabase
