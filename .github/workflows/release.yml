@@ -30,6 +30,7 @@ jobs:
           helm repo add cas-postgres https://bcgov.github.io/cas-postgres/
           helm repo add cas-airflow https://bcgov.github.io/cas-airflow/
           helm repo add certbot https://bcdevops.github.io/certbot
+          helm repo add pipeline https://bcgov.github.io/cas-pipeline/
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
