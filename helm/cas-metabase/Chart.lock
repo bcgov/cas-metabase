@@ -8,11 +8,8 @@ dependencies:
 - name: cas-airflow-dag-trigger
   repository: https://bcgov.github.io/cas-airflow
   version: 1.0.8
-- name: certbot
-  repository: https://bcdevops.github.io/certbot
-  version: 0.1.3
 - name: terraform-bucket-provision
   repository: https://bcgov.github.io/cas-pipeline/
   version: 0.1.3
-digest: sha256:fdaafd3137f0ec2851d5bdc0cfcaf44dd8966fe28905ae68ee8404f6d9c13250
-generated: "2024-02-23T12:10:10.736428111-07:00"
+digest: sha256:4344c50f074476722ea9a049fbab33053e71ee1c300919132705264a73a6dfba
+generated: "2024-03-11T15:26:40.41001038-07:00"

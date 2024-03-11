@@ -17,9 +17,6 @@ dependencies:
     repository: https://bcgov.github.io/cas-airflow
     alias: prod-test-restore
     condition: prod-test-restore.enable
-  - name: certbot
-    version: 0.1.3
-    repository: https://bcdevops.github.io/certbot
   - name: terraform-bucket-provision
     version: 0.1.3
     repository: https://bcgov.github.io/cas-pipeline/
