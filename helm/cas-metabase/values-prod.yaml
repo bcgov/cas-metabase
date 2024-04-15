@@ -3,10 +3,10 @@ cas-postgres:
     resources:
       limits:
         cpu: "1"
-        memory: 2Gi
+        memory: 3Gi
       requests:
         cpu: 15m
-        memory: 600Mi
+        memory: 1300Mi
     walE:
       enable: true
       # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}, has to be < 28 characters
