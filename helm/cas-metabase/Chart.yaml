@@ -2,7 +2,7 @@ apiVersion: v2
 name: cas-metabase
 description: A Helm chart for the CAS Metabase instance
 type: application
-version: 0.3.9
+version: 0.3.10
 appVersion: 0.48.6
 dependencies:
   - name: cas-postgres
