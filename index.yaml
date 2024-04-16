@@ -2,6 +2,32 @@ apiVersion: v1
 entries:
   cas-metabase:
   - apiVersion: v2
+    appVersion: 0.49.6
+    created: "2024-04-16T18:27:33.50280203Z"
+    dependencies:
+    - name: cas-postgres
+      repository: https://bcgov.github.io/cas-postgres/
+      version: 0.9.1
+    - alias: download-cas-metabase-dags
+      name: cas-airflow-dag-trigger
+      repository: https://bcgov.github.io/cas-airflow
+      version: 1.0.8
+    - alias: prod-test-restore
+      condition: prod-test-restore.enable
+      name: cas-airflow-dag-trigger
+      repository: https://bcgov.github.io/cas-airflow
+      version: 1.0.8
+    - name: terraform-bucket-provision
+      repository: https://bcgov.github.io/cas-pipeline/
+      version: 0.1.3
+    description: A Helm chart for the CAS Metabase instance
+    digest: 5f179417005e6fc44c226891dd263185575c1e5e8882e162236ec2d45c577ad2
+    name: cas-metabase
+    type: application
+    urls:
+    - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.3.10/cas-metabase-0.3.10.tgz
+    version: 0.3.10
+  - apiVersion: v2
     appVersion: 0.48.6
     created: "2024-02-26T21:33:53.134309581Z"
     dependencies:
@@ -490,4 +516,4 @@ entries:
     urls:
     - https://github.com/bcgov/cas-metabase/releases/download/metabase-0.12.1/metabase-0.12.1.tgz
     version: 0.12.1
-generated: "2024-02-26T21:33:53.134425258Z"
+generated: "2024-04-16T18:27:33.503005748Z"
