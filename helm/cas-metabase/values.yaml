@@ -41,10 +41,10 @@ database:
   existingSecretPasswordKey: database-password
 resources:
   limits:
-    cpu: 1
+    cpu: 500m
     memory: 4Gi
   requests:
-    cpu: 250m
+    cpu: 25m
     memory: 2Gi
 podLabels:
   app.kubernetes.io/component: app
