@@ -1,0 +1,13 @@
+replicaCount: 3
+
+environment: prod
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 150Mi
+  limits:
+    cpu: 600m
+    memory: 600Mi
+
+storageSize: 3Gi

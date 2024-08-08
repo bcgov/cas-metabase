@@ -1,0 +1,19 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: obps-metabase-access
+  labels: {{ include "cas-obps-postgres.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      postgres-operator.crunchydata.com/role: replica
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: cas-metabase
+          namespaceSelector:
+            matchLabels:
+              environment: {{ .Values.metabase.environment }}
+              name: {{ .Values.metabase.prefix }}

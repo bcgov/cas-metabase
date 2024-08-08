@@ -1,0 +1,14 @@
+apiVersion: v2
+name: patroni-migration
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: terraform-bucket-provision
+    version: "0.1.4"
+    repository: https://bcgov.github.io/cas-pipeline/
+  - name: cas-obps-postgres
+    version: "0.1.0"
+    repository: "file://../cas-obps-postgres"
