@@ -1,8 +1,8 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: allow-crunchydb-ha
-  labels:
+  name: {{ .Release.Name }}-allow-crunchydb-ha
+  labels: {{ include "cas-postgres-cluster.labels" . | nindent 4 }}
     postgres-operator.crunchydata.com/cluster: {{ .Release.Name }}
 spec:
   podSelector:

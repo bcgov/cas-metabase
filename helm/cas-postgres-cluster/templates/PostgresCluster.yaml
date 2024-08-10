@@ -1,8 +1,8 @@
 apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
-  name: {{ include "cas-obps-postgres.fullname" . }}
-  labels: {{ include "cas-obps-postgres.labels" . | nindent 4 }}
+  name: {{ include "cas-postgres-cluster.fullname" . }}
+  labels: {{ include "cas-postgres-cluster.labels" . | nindent 4 }}
 spec:
   # this block is useful only if you also have monitoring set up for your cluster.
   # this example installation is intended to be as small as possible, so it has been removed.
@@ -19,19 +19,19 @@ spec:
   #         limits:
   #           cpu: 100m
   #           memory: 64Mi
-  image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-postgres:ubi8-14.7-0
+  image: {{ .Values.postgresCluster.postgres.image }}:{{ .Values.postgresCluster.postgres.tag }}
   metadata:
-    labels: {{ include "cas-obps-postgres.labels" . | nindent 6 }}
-  postgresVersion: 14
+    labels: {{ include "cas-postgres-cluster.labels" . | nindent 6 }}
+  postgresVersion: {{ .Values.postgresCluster.postgresVersion }}
   instances:
     - name: pgha1
-      replicas: {{ .Values.replicaCount }}
+      replicas: {{ .Values.postgresCluster.postgres.replicaCount }}
       # this is how you create a PDB - don't make a separate one yourself!
       minAvailable: 1
-      # these resources are for the "database" container in the "obps-postgres-pgha1" set of pods
-      resources: {{ toYaml .Values.resources | nindent 8 }}
+      # these resources are for the "database" container in the "<release-name>-pgha1" set of pods
+      resources: {{ toYaml .Values.postgresCluster.resources | nindent 8 }}
       sidecars:
-        # this stuff is for the "replication-cert-copy" container in the "obps-postgres-pgha1" set of pods
+        # this stuff is for the "replication-cert-copy" container in the "<release-name>-pgha1" set of pods
         replicaCertCopy:
           resources:
             requests:
@@ -45,7 +45,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: {{ .Values.storageSize }}
+            storage: {{ .Values.postgresCluster.storageSize }}
         storageClassName: netapp-block-standard
       affinity:
         podAntiAffinity:
@@ -55,34 +55,41 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  postgres-operator.crunchydata.com/cluster: {{ template "cas-obps-postgres.fullname" . }}
+                  postgres-operator.crunchydata.com/cluster: {{ template "cas-postgres-cluster.fullname" . }}
                   postgres-operator.crunchydata.com/instance-set: pgha1
-  users:
-    - name: postgres
-      databases:
-        - obps
-    - name: registration
-      databases:
-        - obps
-
+  users: {{ toYaml .Values.postgresCluster.users | nindent 4 }}
   backups:
     pgbackrest:
-      image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-pgbackrest:ubi8-2.41-4
+      image: {{ .Values.postgresCluster.pgbackrest.image }}:{{ .Values.postgresCluster.pgbackrest.tag }}
       global:
         repo1-retention-full: "90"
         repo1-retention-full-type: time
+{{- if index .Values "terraform-bucket-provision" "enable" }}
       configuration:
         - configMap:
-            name: {{ template "cas-obps-postgres.fullname" . }}-pgbackrest
+            name: {{ template "cas-postgres-cluster.fullname" . }}-pgbackrest
         - secret:
-            name: gcp-{{ .Release.Namespace }}-obps-backups-service-account-key
+            name: gcp-{{ .Release.Namespace }}-{{ .Values.gcsBucket }}-service-account-key
             items:
               - key: credentials.json
                 path: gcs-key.json
+{{- end }}
       repos:
         - name: repo1
+{{- if index .Values "terraform-bucket-provision" "enable" }}
           gcs:
-            bucket: {{ .Release.Namespace }}-obps-backups
+            bucket: {{ .Release.Namespace }}-{{ .Values.gcsBucket }}
+{{- else }}
+          # We backup to a local PVC
+          volume:
+            volumeClaimSpec:
+              storageClassName: netapp-block-standard
+              accessModes:
+              - "ReadWriteOnce"
+              resources:
+                requests:
+                  storage: {{ .Values.postgresCluster.storageSize }}
+{{- end }}
           schedules:
             full: "0 8 * * *"
             # run incremental backup every 4 hours, except at 8am UTC (when the full backup is running)
@@ -122,11 +129,11 @@ spec:
           max_wal_size: '500MB' # default is 1GB
   proxy:
     pgBouncer:
-      image: artifacts.developer.gov.bc.ca/bcgov-docker-local/crunchy-pgbouncer:ubi8-1.18-0
+      image: {{ .Values.postgresCluster.pgbouncer.image }}:{{ .Values.postgresCluster.pgbouncer.tag }}
       config:
         global:
           client_tls_sslmode: disable
-      replicas: 2
+      replicas: {{ .Values.postgresCluster.pgbouncer.replicaCount }}
       # these resources are for the "pgbouncer" container in the "obps-postgres-pgbouncer" set of pods
       # there is a sidecar in these pods which are not mentioned here, but the requests/limits are teeny weeny by default so no worries there.
       resources:
@@ -144,5 +151,5 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  postgres-operator.crunchydata.com/cluster: {{ template "cas-obps-postgres.fullname" . }}
+                  postgres-operator.crunchydata.com/cluster: {{ template "cas-postgres-cluster.fullname" . }}
                   postgres-operator.crunchydata.com/role: pgbouncer
