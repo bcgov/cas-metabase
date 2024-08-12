@@ -60,3 +60,15 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{- define "patroni-migration.dbenv" -}}
+{{- if index .Values "from" . }}
+value: {{ index .Values "from" . }}
+{{- else }}
+valueFrom:
+  secretKeyRef:
+    key: {{ index .Values "from" (printf "%s%s" . "SecretKey") }}
+    name: {{ .Values.from.secret }}
+{{- end }}
+{{- end }}

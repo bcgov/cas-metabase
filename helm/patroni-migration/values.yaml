@@ -1,0 +1,28 @@
+# Actually run the migration
+runMigration: false
+
+migrationJob:
+  image: postgres
+  tag: 15
+
+deployment:
+  name: cas-metabase
+  originalReplicaCount: 2
+
+from:
+  #Assuming all database information will be in the same secret
+  secretName: ~
+  hostSecretKey: ~
+  host: ~
+  passwordSecretKey: ~
+  password: ~
+  dbSecretKey: ~
+  db: ~
+  portSecretKey: ~
+  port: ~
+  userSecretKey: ~
+  user: ~
+
+to:
+  # This is necessarily a PGO deployment
+  secretName: ~
