@@ -28,11 +28,50 @@ spec:
           image: {{ .Values.migrationJob.image }}:{{ .Values.migrationJob.tag }}
           env:
             - name: PGHOST
+              {{- if .Values.from.host }}
+              value: {{ .Values.from.host }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.from.hostSecretKey }}
+                  name: {{ .Values.from.secretName }}
+              {{- end }}
             - name: PGPORT
+              {{- if .Values.from.port }}
+              value: {{ .Values.from.port }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.from.portSecretKey }}
+                  name: {{ .Values.from.secretName }}
+              {{- end }}
             - name: PGUSER
+              {{- if .Values.from.user }}
+              value: {{ .Values.from.user }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.from.userSecretKey }}
+                  name: {{ .Values.from.secretName }}
+              {{- end }}
             - name: PGPASSWORD
-              {{ template "patroni-migration.dbenv" "password" | indent 14 }}
+              {{- if .Values.from.password }}
+              value: {{ .Values.from.password }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.from.passwordSecretKey }}
+                  name: {{ .Values.from.secretName }}
+              {{- end }}
             - name: PGDATABASE
+              {{- if .Values.from.db }}
+              value: {{ .Values.from.db }}
+              {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.from.dbSecretKey }}
+                  name: {{ .Values.from.secretName }}
+              {{- end }}
           command:
             - "bin/bash"
             - "-c"

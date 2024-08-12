@@ -11,17 +11,17 @@ deployment:
 
 from:
   #Assuming all database information will be in the same secret
-  secretName: ~
+  secretName: cas-metabase-patroni
   hostSecretKey: ~
-  host: ~
-  passwordSecretKey: ~
+  host: cas-metabase-patroni-readonly.9212c9-dev.svc.cluster.local
+  passwordSecretKey: password-superuser
   password: ~
   dbSecretKey: ~
-  db: ~
+  db: metabase
   portSecretKey: ~
-  port: ~
+  port: 5432
   userSecretKey: ~
-  user: ~
+  user: postgres
 
 to:
   # This is necessarily a PGO deployment

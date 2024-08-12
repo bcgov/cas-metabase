@@ -1,9 +1,0 @@
-dependencies:
-- name: terraform-bucket-provision
-  repository: https://bcgov.github.io/cas-pipeline/
-  version: 0.1.4
-- name: cas-obps-postgres
-  repository: file://../cas-obps-postgres
-  version: 0.1.0
-digest: sha256:d6840b7b621d0276f7b7fdbbca2d0ce979088c9231ddc9efd99518d200de0aaa
-generated: "2024-08-08T14:09:38.222374-07:00"
