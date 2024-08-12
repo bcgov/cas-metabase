@@ -1,5 +1,0 @@
-cas-obps-postgres:
-  terraform-bucket-provision:
-    terraform:
-      namespace_apps: '["obps-backups"]'
-      workspace: postgres
