@@ -29,5 +29,5 @@ spec:
           command:
             - "bin/bash"
             - "-c"
-            - "kubectl scale --replicas=2 deployment/cas-metabase"
+            - "kubectl scale --current-replicas=0 --replicas={{ .Values.originalReplicaCount }} deployment/{{ .Values.deployment.name }}"
       restartPolicy: Never
