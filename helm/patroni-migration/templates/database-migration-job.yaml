@@ -4,7 +4,7 @@ metadata:
   name: {{ template "patroni-migration.fullname" . }}-migrate-database-{{ randAlphaNum 5 | lower }}
   annotations:
     "helm.sh/hook": "pre-install,pre-upgrade"
-    "helm.sh/hook-weight": "-50"
+    "helm.sh/hook-weight": "0"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   parallelism: 1
@@ -29,7 +29,7 @@ spec:
           env:
             - name: PGHOST
               {{- if .Values.from.host }}
-              value: {{ .Values.from.host }}
+              value: {{ .Values.from.host | quote }}
               {{- else }}
               valueFrom:
                 secretKeyRef:
@@ -38,7 +38,7 @@ spec:
               {{- end }}
             - name: PGPORT
               {{- if .Values.from.port }}
-              value: {{ .Values.from.port }}
+              value: {{ .Values.from.port | quote }}
               {{- else }}
               valueFrom:
                 secretKeyRef:
@@ -47,7 +47,7 @@ spec:
               {{- end }}
             - name: PGUSER
               {{- if .Values.from.user }}
-              value: {{ .Values.from.user }}
+              value: {{ .Values.from.user | quote }}
               {{- else }}
               valueFrom:
                 secretKeyRef:
@@ -56,7 +56,7 @@ spec:
               {{- end }}
             - name: PGPASSWORD
               {{- if .Values.from.password }}
-              value: {{ .Values.from.password }}
+              value: {{ .Values.from.password | quote }}
               {{- else }}
               valueFrom:
                 secretKeyRef:
@@ -65,7 +65,7 @@ spec:
               {{- end }}
             - name: PGDATABASE
               {{- if .Values.from.db }}
-              value: {{ .Values.from.db }}
+              value: {{ .Values.from.db | quote }}
               {{- else }}
               valueFrom:
                 secretKeyRef:

@@ -29,5 +29,5 @@ spec:
           command:
             - "bin/bash"
             - "-c"
-            - "kubectl scale --current-replicas={{ .Values.originalReplicasCount }} --replicas=0 deployment/{{ .Values.deployment.name }}"
+            - "kubectl scale --current-replicas={{ .Values.deployment.originalReplicaCount }} --replicas=0 deployment/{{ .Values.deployment.name }}"
       restartPolicy: Never

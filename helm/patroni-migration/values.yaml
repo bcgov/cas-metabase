@@ -7,6 +7,8 @@ migrationJob:
 
 deployment:
   name: cas-metabase
+  # for the KNP
+  releaseName: cas-metabase
   originalReplicaCount: 2
 
 from:
