@@ -2,9 +2,18 @@ SHELL := /usr/bin/env bash
 
 GIT_SHA1=$(shell git rev-parse HEAD)
 
+.PHONY: install_database
+install_database:
+	@set -euo pipefail; \
+	helm repo add cas-postgres https://bcgov.github.io/cas-postgres/; \
+	helm upgrade --install --atomic --wait-for-jobs --timeout 1800s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
+	--values ./helm/cas-metabase-postgres-cluster/values.yaml \
+	--values ./helm/cas-metabase-postgres-cluster/values-$(ENVIRONMENT).yaml \
+	cas-metabase-db cas-postgres/cas-postgres-cluster;
 
 .PHONY: install
-install:
+install: install_database
+install: 
 	@set -euo pipefail; \
 	dagConfig=$$(echo '{"org": "bcgov", "repo": "cas-metabase", "ref": "$(GIT_SHA1)", "path": "dags/cas_metabase_dags.py"}' | base64 -w0); \
 	helm dep up ./helm/cas-metabase; \

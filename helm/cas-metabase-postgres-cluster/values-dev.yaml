@@ -1,0 +1,14 @@
+environment: dev
+
+postgresCluster:
+  postgres:
+    replicaCount: 2
+  pgbouncer:
+    replicaCount: 2
+
+  users:
+    - name: postgres
+      options: "SUPERUSER"
+    - name: testuser
+      databases: 
+        - testdatabase
