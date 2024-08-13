@@ -18,13 +18,15 @@ from:
   host: cas-metabase-patroni-readonly.9212c9-dev.svc.cluster.local
   passwordSecretKey: password-superuser
   password: ~
-  dbSecretKey: ~
-  db: metabase
   portSecretKey: ~
   port: 5432
   userSecretKey: ~
   user: postgres
 
+  # The name of the database to migrate
+  db: metabase
+
 to:
   # This is necessarily a PGO deployment
   secretName: ~
+  db: metabase

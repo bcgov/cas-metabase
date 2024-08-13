@@ -27,7 +27,7 @@ spec:
               memory: 256Mi
           image: {{ .Values.migrationJob.image }}:{{ .Values.migrationJob.tag }}
           env:
-            - name: PGHOST
+            - name: SOURCE_PGHOST
               {{- if .Values.from.host }}
               value: {{ .Values.from.host | quote }}
               {{- else }}
@@ -36,7 +36,7 @@ spec:
                   key: {{ .Values.from.hostSecretKey }}
                   name: {{ .Values.from.secretName }}
               {{- end }}
-            - name: PGPORT
+            - name: SOURCE_PGPORT
               {{- if .Values.from.port }}
               value: {{ .Values.from.port | quote }}
               {{- else }}
@@ -45,7 +45,7 @@ spec:
                   key: {{ .Values.from.portSecretKey }}
                   name: {{ .Values.from.secretName }}
               {{- end }}
-            - name: PGUSER
+            - name: SOURCE_PGUSER
               {{- if .Values.from.user }}
               value: {{ .Values.from.user | quote }}
               {{- else }}
@@ -54,7 +54,7 @@ spec:
                   key: {{ .Values.from.userSecretKey }}
                   name: {{ .Values.from.secretName }}
               {{- end }}
-            - name: PGPASSWORD
+            - name: SOURCE_PGPASSWORD
               {{- if .Values.from.password }}
               value: {{ .Values.from.password | quote }}
               {{- else }}
@@ -63,7 +63,7 @@ spec:
                   key: {{ .Values.from.passwordSecretKey }}
                   name: {{ .Values.from.secretName }}
               {{- end }}
-            - name: PGDATABASE
+            - name: SOURCE_PGDATABASE
               {{- if .Values.from.db }}
               value: {{ .Values.from.db | quote }}
               {{- else }}
@@ -72,8 +72,58 @@ spec:
                   key: {{ .Values.from.dbSecretKey }}
                   name: {{ .Values.from.secretName }}
               {{- end }}
+            - name: TARGET_PGHOST
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: {{ .Values.to.secretName }}
+            - name: TARGET_PGPORT
+              valueFrom:
+                secretKeyRef:
+                  key: port
+                  name: {{ .Values.to.secretName }}
+            - name: TARGET_PGUSER
+              valueFrom:
+                secretKeyRef:
+                  key: user
+                  name: {{ .Values.to.secretName }}
+            - name: TARGET_PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: port
+                  name: {{ .Values.to.secretName }}
+            - name: TARGET_PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  key: dbname
+                  name: {{ .Values.to.secretName }}
+
           command:
             - "bin/bash"
             - "-c"
-            - "pg_dumpall -g"
+            - |
+              set -euo pipefail;
+
+              echo "$SOURCE_PGHOST:$SOURCE_PGPORT:$SOURCE_PGDATABASE:$SOURCE_PGUSER:$SOURCE_PGPASSWORD" >> .source_pgpass
+              echo "$TARGET_PGHOST:$TARGET_PGPORT:$TARGET_PGDATABASE:$TARGET_PGUSER:$TARGET_PGPASSWORD" >> .target_pgpass
+
+              chmod 0600 .source_pgpass
+              chmod 0600 .target_pgpass
+
+              PGPASSFILE=".source_pgpass" pg_isready
+              PGPASSFILE=".target_pgpass" pg_isready
+              
+              
+              # while [! ]
+              #   pg_isready -d $SOURCE_PGDATABASE -h $SOURCE_PGHOST -p $SOURCE_PGPORT -u $SOURCE_PGUSER 
+              #   pg_isready $TARGET
+              # end;
+
+              # # Check whether the migration already happened
+
+              # PGPASSFILE="..." psql -c "select etc etc"
+
+
+              # pg_dumpall (old db) -g | psql (new db) <
+              # pg_dump | psql < 
       restartPolicy: Never
