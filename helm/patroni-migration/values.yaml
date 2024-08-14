@@ -8,14 +8,15 @@ migrationJob:
 deployment:
   name: cas-metabase
   # for the KNP
-  releaseName: cas-metabase
+  sourceReleaseName: cas-metabase
+  targetReleaseName: cas-metabase-db
   originalReplicaCount: 2
 
 from:
   #Assuming all database information will be in the same secret
   secretName: cas-metabase-patroni
   hostSecretKey: ~
-  host: cas-metabase-patroni-readonly.9212c9-dev.svc.cluster.local
+  host: cas-metabase-patroni.9212c9-dev.svc.cluster.local
   passwordSecretKey: password-superuser
   password: ~
   portSecretKey: ~
@@ -28,5 +29,5 @@ from:
 
 to:
   # This is necessarily a PGO deployment
-  secretName: ~
+  secretName: cas-metabase-db-cas-postgres-cluster-pguser-superuser
   db: metabase

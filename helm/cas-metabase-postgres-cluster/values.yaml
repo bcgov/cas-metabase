@@ -5,14 +5,22 @@ environment: ~
 
 postgresCluster:
   postgres:
-    replicaCount: 1
+    replicaCount: 2
   pgbouncer:
-    replicaCount: 1
+    replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+      
 
   # The "users" value(s) is passed to the crunchy postgres operator to create the database.
   # See https://access.crunchydata.com/documentation/postgres-operator/latest/tutorials/basic-setup/user-management
   users:
-    - name: postgres
+    - name: superuser
       options: "SUPERUSER"
 
 gcsBackups:
