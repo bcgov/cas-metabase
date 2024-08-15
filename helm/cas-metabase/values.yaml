@@ -90,3 +90,22 @@ terraform-bucket-provision:
   terraform:
     namespace_apps: '["mb-backups"]'
     workspace: metabase
+
+patroni-migration:
+  deployment:
+    name: cas-metabase
+    # for the KNP
+    sourceReleaseName: cas-metabase
+    targetReleaseName: cas-metabase-db
+    originalReplicaCount: 2
+
+  from:
+    secretName: cas-metabase-patroni
+    host: cas-metabase-patroni.9212c9-dev.svc.cluster.local
+    passwordSecretKey: password-superuser
+    port: 5432
+    user: postgres
+    db: metabase
+
+  to:
+    secretName: cas-metabase-db-cas-postgres-cluster-pguser-superuser
