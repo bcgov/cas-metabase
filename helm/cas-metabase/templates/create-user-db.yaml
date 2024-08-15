@@ -25,16 +25,25 @@ spec:
             - name: PGDATABASE
               value: postgres
             - name: PGUSER
-              value: postgres
+              valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.superUserSecretName }}
+                key: user
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: password-superuser
-                  name: {{ template "cas-metabase.fullname" . }}-patroni
+                  key: {{ .Values.database.superUserSecretName }}
+                  name: password
             - name: PGPORT
-              value: "5432"
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.database.superUserSecretName }}
+                  name: pgbouncer-port
             - name: PGHOST
-              value: {{ template "cas-metabase.fullname" . }}-patroni
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.database.superUserSecretName }}
+                  name: pgbouncer-host
             - name: METABASE_USER
               valueFrom:
                 secretKeyRef:
@@ -46,7 +55,7 @@ spec:
                   key: database-password
                   name: {{ template "cas-metabase.fullname" . }}
             - name: METABASE_DATABASE
-              value: metabase
+              value: {{ .Values.database.dbname | quote }}
           command:
                 - /usr/bin/env
                 - bash

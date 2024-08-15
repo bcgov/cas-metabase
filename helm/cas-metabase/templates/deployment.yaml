@@ -55,9 +55,15 @@ spec:
           - name: MB_DB_TYPE
             value: {{ .Values.database.type | lower }}
           - name: MB_DB_HOST
-            value: {{ .Values.database.host | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.superUserSecretName }}
+                key: pgbouncer-host
           - name: MB_DB_PORT
-            value: {{ .Values.database.port | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.superUserSecretName }}
+                key: pgbouncer-port
           - name: MB_DB_DBNAME
             value: {{ .Values.database.dbname | quote }}
           - name: MB_DB_USER
