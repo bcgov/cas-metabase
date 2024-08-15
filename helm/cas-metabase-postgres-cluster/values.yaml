@@ -5,7 +5,7 @@ environment: ~
 
 postgresCluster:
   postgres:
-    replicaCount: 2
+    replicaCount: 3
   pgbouncer:
     replicaCount: 2
   resources:
@@ -15,7 +15,6 @@ postgresCluster:
     limits:
       cpu: 500m
       memory: 512Mi
-      
 
   # The "users" value(s) is passed to the crunchy postgres operator to create the database.
   # See https://access.crunchydata.com/documentation/postgres-operator/latest/tutorials/basic-setup/user-management
@@ -24,7 +23,17 @@ postgresCluster:
       options: "SUPERUSER"
 
 gcsBackups:
-  enable: false
+  enable: true
+  # Needs to match the "namespace_apps" value in the terraform provisioning chart.
+  # example syntax: bucketName
+  bucketName: mb-pgo-backups
+
+terraform-bucket-provision:
+  terraform:
+    # example syntax: '["bucketName"]'
+    namespace_apps: '["mb-pgo-backups"]'
+    # !important: unique for the deployment
+    workspace: metabase
 
 # To configure a KNP allowing external access, for metabase for example
 external-access:
