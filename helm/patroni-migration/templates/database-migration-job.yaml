@@ -20,6 +20,7 @@ spec:
       labels: {{ include "patroni-migration.labels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ .Release.Name }}-database-migration
+      restartPolicy: Never
       containers:
         - name: {{ template "patroni-migration.fullname" . }}-migrate-database
           resources:
@@ -100,7 +101,7 @@ spec:
             - "bin/bash"
             - "-c"
             - |
-              set -eux;
+              set -eu;
 
               until PGHOST=$SOURCE_PGHOST PGPORT=$SOURCE_PGPORT PGUSER=$SOURCE_PGUSER PGPASSWORD=$SOURCE_PGPASSWORD pg_isready;
               do
@@ -114,6 +115,16 @@ spec:
                 sleep 10;
               done;
 
+
+              if PGHOST=$TARGET_PGHOST PGPORT=$TARGET_PGPORT PGUSER=$TARGET_PGUSER PGPASSWORD=$TARGET_PGPASSWORD psql -lqt | cut -d \| -f 1 | grep -qw $SOURCE_PGDATABASE; then
+                echo "Database $SOURCE_PGDATABASE already exists on target, aborting to prevent accidental overwrite";
+                exit 1;
+              fi;
+
+              # Migrating roles:
+              # `grep -v "ROLE $SOURCE_PGUSER"` is to prevent overwriting the new cluster role, we omit the CREATE ROLE and ALTER ROLE statements.
+              # i.e. if $SOURCE_PGUSER and $TARGET_PGUSER are the same, and the default postgres role
+
               PGHOST=$TARGET_PGHOST \
               PGPORT=$TARGET_PGPORT \
               PGUSER=$TARGET_PGUSER \
@@ -123,9 +134,10 @@ spec:
                   PGPORT=$SOURCE_PGPORT \
                   PGUSER=$SOURCE_PGUSER \
                   PGPASSWORD=$SOURCE_PGPASSWORD \
-                  pg_dumpall -g \
+                  pg_dumpall -g | grep -v -E "ROLE $SOURCE_PGUSER|ROLE postgres"\
               );
 
+              # Migrating data
 
               PGHOST=$TARGET_PGHOST \
               PGPORT=$TARGET_PGPORT \
@@ -139,25 +151,6 @@ spec:
                   pg_dump -C $SOURCE_PGDATABASE \
               );
 
+              echo "Database $SOURCE_PGDATABASE migrated successfully!"
+
               exit 0;
-              
-              # while [! ]
-              #   pg_isready -d $SOURCE_PGDATABASE -h $SOURCE_PGHOST -p $SOURCE_PGPORT -u $SOURCE_PGUSER 
-              #   pg_isready $TARGET
-              # end;
-
-              # # Check whether the migration already happened
-
-              # PGPASSFILE="..." psql -c "select etc etc"
-
-
-              # pg_dumpall (old db) -g | psql (new db) <
-              # pg_dump | psql < 
-          volumeMounts:
-            - mountPath: /pgpass/
-              name: pgpass
-      restartPolicy: Never
-      volumes:
-        - name: pgpass
-          emptyDir:
-            sizeLimit: 50Mi

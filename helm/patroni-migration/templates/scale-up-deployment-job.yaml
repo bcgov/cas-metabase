@@ -1,4 +1,4 @@
-{{- if eq 1 0 }}
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -34,4 +34,4 @@ spec:
             - "-c"
             - "kubectl scale --current-replicas=0 --replicas={{ .Values.deployment.originalReplicaCount }} deployment/{{ .Values.deployment.name }}"
       restartPolicy: Never
-{{- end }}
+
