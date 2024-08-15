@@ -13,6 +13,6 @@ dependencies:
   version: 0.1.3
 - name: patroni-migration
   repository: https://bcgov.github.io/cas-postgres/
-  version: 0.0.1
-digest: sha256:d497d3f1f9bb1d0727d6bd01ed0bf2d5f6a52b6ca66a0f84cc2838f82ce739db
-generated: "2024-08-14T21:45:21.300622-07:00"
+  version: 0.0.2
+digest: sha256:63a806ff1b7790b9d716b5d9b93d13461108d829f21fac8a99cb628cb1ff1377
+generated: "2024-08-14T21:56:12.132134-07:00"
