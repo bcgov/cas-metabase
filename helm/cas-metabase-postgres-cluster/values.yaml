@@ -33,7 +33,7 @@ terraform-bucket-provision:
     # example syntax: '["bucketName"]'
     namespace_apps: '["mb-pgo-backups"]'
     # !important: unique for the deployment
-    workspace: metabase
+    workspace: metabase-pgo
 
 # To configure a KNP allowing external access, for metabase for example
 external-access:
