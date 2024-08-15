@@ -11,7 +11,7 @@ metadata:
 spec:
   parallelism: 1
   completions: 1
-  backoffLimit: 10
+  backoffLimit: 0
   template:
     metadata:
       name: {{ template "patroni-migration.fullname" . }}-scale-down-deployment
