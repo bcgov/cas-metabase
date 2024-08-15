@@ -33,6 +33,7 @@ image:
   pullPolicy: Always
 database:
   type: postgres
+  clusterReleaseName: cas-metabase-db
   superUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
   dbname: metabase
   existingSecret: cas-metabase
