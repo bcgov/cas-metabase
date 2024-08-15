@@ -8,11 +8,8 @@ dependencies:
 - name: cas-airflow-dag-trigger
   repository: https://bcgov.github.io/cas-airflow
   version: 1.0.8
-- name: terraform-bucket-provision
-  repository: https://bcgov.github.io/cas-pipeline/
-  version: 0.1.3
 - name: patroni-migration
   repository: https://bcgov.github.io/cas-postgres/
-  version: 0.0.2
-digest: sha256:63a806ff1b7790b9d716b5d9b93d13461108d829f21fac8a99cb628cb1ff1377
-generated: "2024-08-14T21:56:12.132134-07:00"
+  version: 0.0.5
+digest: sha256:38c2278c7e60e0ee9743305dcb0e4aec613c0ea1fcb0eda812d6464e54282173
+generated: "2024-08-15T10:41:40.287337-07:00"

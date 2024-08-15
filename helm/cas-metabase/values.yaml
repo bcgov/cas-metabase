@@ -33,7 +33,7 @@ image:
   pullPolicy: Always
 database:
   type: postgres
-  superUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-superuser
+  superUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
   dbname: metabase
   existingSecret: cas-metabase
   existingSecretUsernameKey: database-user
@@ -106,4 +106,4 @@ patroni-migration:
     db: metabase
 
   to:
-    secretName: cas-metabase-db-cas-postgres-cluster-pguser-superuser
+    secretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres

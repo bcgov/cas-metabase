@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "cas-metabase.fullname" . }}-create-user-db-{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}
+  labels: {{ include "cas-metabase.labels" . | nindent 4 }}
 spec:
   parallelism: 1
   completions: 1
@@ -32,18 +33,18 @@ spec:
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.database.superUserSecretName }}
-                  name: password
+                  name: {{ .Values.database.superUserSecretName }}
+                  key: password
             - name: PGPORT
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.database.superUserSecretName }}
-                  name: pgbouncer-port
+                  name: {{ .Values.database.superUserSecretName }}
+                  key: pgbouncer-port
             - name: PGHOST
               valueFrom:
                 secretKeyRef:
-                  key: {{ .Values.database.superUserSecretName }}
-                  name: pgbouncer-host
+                  name: {{ .Values.database.superUserSecretName }}
+                  key: pgbouncer-host
             - name: METABASE_USER
               valueFrom:
                 secretKeyRef:
