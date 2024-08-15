@@ -24,37 +24,37 @@ spec:
           image: {{ index .Values "cas-postgres" "patroni" "image" "repository" }}:{{ index .Values "cas-postgres" "patroni" "image" "tag" }}
           env:
             - name: PGDATABASE
-              value: postgres
+              value: metabase
             - name: PGUSER
               valueFrom:
-              secretKeyRef:
-                name: {{ .Values.database.superUserSecretName }}
-                key: user
+                secretKeyRef:
+                  name: {{ .Values.database.metabaseUserSecretName }}
+                  key: user
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.database.superUserSecretName }}
+                  name: {{ .Values.database.metabaseUserSecretName }}
                   key: password
             - name: PGPORT
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.database.superUserSecretName }}
-                  key: pgbouncer-port
+                  name: {{ .Values.database.metabaseUserSecretName }}
+                  key: port
             - name: PGHOST
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.database.superUserSecretName }}
-                  key: pgbouncer-host
+                  name: {{ .Values.database.metabaseUserSecretName }}
+                  key: host
             - name: METABASE_USER
               valueFrom:
                 secretKeyRef:
-                  key: database-user
-                  name: {{ template "cas-metabase.fullname" . }}
+                  name: {{ .Values.database.metabaseUserSecretName }}
+                  key: user
             - name: METABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: database-password
-                  name: {{ template "cas-metabase.fullname" . }}
+                  name: {{ .Values.database.metabaseUserSecretName }}
+                  key: password
             - name: METABASE_DATABASE
               value: {{ .Values.database.dbname | quote }}
           command:
@@ -63,5 +63,5 @@ spec:
                 - -c
                 - |
                   set -euo pipefail;
-                  create-user-db -d $(METABASE_DATABASE) -u $(METABASE_USER) -p $(METABASE_PASSWORD) --owner;
+                  create-user-db -d $METABASE_DATABASE -u $METABASE_USER -p $METABASE_PASSWORD --owner;
       restartPolicy: Never

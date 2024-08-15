@@ -34,7 +34,7 @@ image:
 database:
   type: postgres
   clusterReleaseName: cas-metabase-db
-  superUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
+  metabaseUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase
   dbname: metabase
   existingSecret: cas-metabase
   existingSecretUsernameKey: database-user
@@ -92,6 +92,9 @@ terraform-bucket-provision:
     workspace: metabase
 
 patroni-migration:
+  migrationJob:
+    ignoreRoles:
+      - metabase
   deployment:
     name: cas-metabase
     # for the KNP

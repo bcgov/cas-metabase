@@ -20,9 +20,7 @@ postgresCluster:
   # See https://access.crunchydata.com/documentation/postgres-operator/latest/tutorials/basic-setup/user-management
   users:
     - name: postgres
-      databases:
-        - postgres
-      options: "SUPERUSER"
+    - name: metabase
 
 gcsBackups:
   enable: true
