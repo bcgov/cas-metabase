@@ -110,4 +110,5 @@ patroni-migration:
     db: metabase
 
   to:
-    secretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
+    superuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
+    appuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase
