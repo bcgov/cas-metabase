@@ -26,23 +26,32 @@ spec:
           containers:
             - env:
                 - name: MB_USER
-                  value: metabase
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: user
                 - name: MB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: database-password
-                      name: cas-metabase
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: password
                 - name: MB_DATABASE
-                  value: metabase
+                  value:  {{ .Values.database.dbname }}
                 - name: MB_HOST
-                  value: cas-metabase-patroni
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: pgbouncer-host
                 - name: MB_PORT
-                  value: "5432"
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: pgbouncer-port
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: password-superuser
-                      name: cas-metabase-patroni
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: password
                 - name: CIIP_PASSWORD
                   valueFrom:
                     secretKeyRef:

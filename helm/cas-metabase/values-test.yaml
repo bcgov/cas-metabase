@@ -17,9 +17,9 @@ route:
 
 image:
   psql:
-    repository: gcr.io/ggl-cas-storage/cas-postgres
+    repository: postgres
     pullPolicy: Always
-    tag: "0.2.1"
+    tag: "15"
 
 download-cas-metabase-dags:
   airflowEndpoint: https://cas-airflow-test.apps.silver.devops.gov.bc.ca
