@@ -18,5 +18,5 @@ dependencies:
     alias: prod-test-restore
     condition: prod-test-restore.enable
   - name: patroni-migration
-    version: 0.0.21
+    version: 1.0.1
     repository:  https://bcgov.github.io/cas-postgres/

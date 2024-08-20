@@ -12,7 +12,7 @@ install_database:
 	helm upgrade --install --atomic --wait-for-jobs --timeout 1800s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
 	--values ./helm/cas-metabase-postgres-cluster/values.yaml \
 	--values ./helm/cas-metabase-postgres-cluster/values-$(ENVIRONMENT).yaml \
-	cas-metabase-db cas-postgres/cas-postgres-cluster --version 1.0.2;
+	cas-metabase-db cas-postgres/cas-postgres-cluster --version 1.1.1;
 
 .PHONY: install_app
 install_app: 
