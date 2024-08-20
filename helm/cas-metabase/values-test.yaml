@@ -30,7 +30,7 @@ metabaseHPA:
   maxReplicas: 5
 
 prod-test-restore:
-  enable: true
+  enable: false
   image:
     tag: 1.0.8
   airflowEndpoint: https://cas-airflow-test.apps.silver.devops.gov.bc.ca

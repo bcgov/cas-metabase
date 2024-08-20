@@ -86,7 +86,7 @@ spec:
                 - -c
                 - |
                   set -euo pipefail;
-                  psql -h $MB_HOST -p $MB_PORT -d $MB_DATABASE -U postgres<<EOF
+                  psql -h $MB_HOST -p $MB_PORT -d $MB_DATABASE -U $MB_USER <<EOF
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'password' || jsonb '{"password": "$(CIIP_PASSWORD)"}') where name ilike 'ciip';
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'host' || jsonb '{"host": "$(CIIP_HOST)"}') where name ilike 'ciip';
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ggircs')) - 'password' || jsonb '{"password": "$(GGIRCS_PASSWORD)"}') where name ilike 'ggircs';
