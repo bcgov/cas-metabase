@@ -26,23 +26,32 @@ spec:
           containers:
             - env:
                 - name: MB_USER
-                  value: metabase
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: user
                 - name: MB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: database-password
-                      name: cas-metabase
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: password
                 - name: MB_DATABASE
-                  value: metabase
+                  value:  {{ .Values.database.dbname }}
                 - name: MB_HOST
-                  value: cas-metabase-patroni
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: pgbouncer-host
                 - name: MB_PORT
-                  value: "5432"
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: pgbouncer-port
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: password-superuser
-                      name: cas-metabase-patroni
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: password
                 - name: CIIP_PASSWORD
                   valueFrom:
                     secretKeyRef:
@@ -77,7 +86,7 @@ spec:
                 - -c
                 - |
                   set -euo pipefail;
-                  psql -h $MB_HOST -p $MB_PORT -d $MB_DATABASE -U postgres<<EOF
+                  psql -h $MB_HOST -p $MB_PORT -d $MB_DATABASE -U $MB_USER <<EOF
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'password' || jsonb '{"password": "$(CIIP_PASSWORD)"}') where name ilike 'ciip';
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ciip')) - 'host' || jsonb '{"host": "$(CIIP_HOST)"}') where name ilike 'ciip';
                     update metabase_database set details = (select jsonb ((select details::json from metabase_database where name ilike 'ggircs')) - 'password' || jsonb '{"password": "$(GGIRCS_PASSWORD)"}') where name ilike 'ggircs';

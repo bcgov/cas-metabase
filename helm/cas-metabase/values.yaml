@@ -33,8 +33,9 @@ image:
   pullPolicy: Always
 database:
   type: postgres
-  host: cas-metabase-patroni
-  port: 5432
+  clusterReleaseName: cas-metabase-db
+  metabaseUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase
+  superuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
   dbname: metabase
   existingSecret: cas-metabase
   existingSecretUsernameKey: database-user
@@ -86,7 +87,26 @@ download-cas-metabase-dags:
   helm:
     hook: "pre-install,pre-upgrade"
 
-terraform-bucket-provision:
-  terraform:
-    namespace_apps: '["mb-backups"]'
-    workspace: metabase
+patroni-migration:
+  migrationJob:
+    ignoreRoles:
+      - metabase
+      - postgres
+
+  deployment:
+    name: cas-metabase
+    # for the KNP
+    sourceReleaseName: cas-metabase
+    targetReleaseName: cas-metabase-db
+
+  from:
+    secretName: cas-metabase-patroni
+    host: ~
+    passwordSecretKey: password-superuser
+    port: 5432
+    user: postgres
+    db: metabase
+
+  to:
+    superuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
+    appuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase

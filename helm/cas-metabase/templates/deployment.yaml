@@ -55,21 +55,27 @@ spec:
           - name: MB_DB_TYPE
             value: {{ .Values.database.type | lower }}
           - name: MB_DB_HOST
-            value: {{ .Values.database.host | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.metabaseUserSecretName }}
+                key: pgbouncer-host
           - name: MB_DB_PORT
-            value: {{ .Values.database.port | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.metabaseUserSecretName }}
+                key: pgbouncer-port
           - name: MB_DB_DBNAME
             value: {{ .Values.database.dbname | quote }}
           - name: MB_DB_USER
             valueFrom:
               secretKeyRef:
-                name: {{ or .Values.database.existingSecret (printf "%s-database" (include "cas-metabase.fullname" .)) }}
-                key: {{ or .Values.database.existingSecretUsernameKey "username" }}
+                name: {{ .Values.database.metabaseUserSecretName }}
+                key: user
           - name: MB_DB_PASS
             valueFrom:
               secretKeyRef:
-                name: {{ or .Values.database.existingSecret (printf "%s-database" (include "cas-metabase.fullname" .)) }}
-                key: {{ or .Values.database.existingSecretPasswordKey "password" }}
+                name: {{ .Values.database.metabaseUserSecretName }}
+                key: password
           {{- if .Values.pluginsDirectory }}
           - name: MB_PLUGINS_DIR
             value: {{ .Values.pluginsDirectory | quote }}

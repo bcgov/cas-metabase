@@ -26,23 +26,37 @@ spec:
           containers:
             - env:
                 - name: MB_USER
-                  value: metabase
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: user
                 - name: MB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: database-password
-                      name: cas-metabase
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: password
                 - name: MB_DATABASE
-                  value: metabase
+                  value:  {{ .Values.database.dbname }}
                 - name: MB_HOST
-                  value: cas-metabase-patroni
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: host
                 - name: MB_PORT
-                  value: "5432"
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.metabaseUserSecretName }}
+                      name: port
+                - name: SUPERUSER_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: {{ .Values.database.superuserSecretName }}
+                      name: user
                 - name: SUPERUSER_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      key: password-superuser
-                      name: cas-metabase-patroni
+                      key: {{ .Values.database.superuserSecretName }}
+                      name: password
                 - name: GOOGLE_APPLICATION_CREDENTIALS
                   value: "/home/postgres/credentials/credentials.json"
                 - name: GOOGLE_APPLICATION_CREDENTIALS_JSON
@@ -100,8 +114,8 @@ spec:
                   pg_ctl -D prod-bak start -w -o "-c log_statement='all' -c logging_collector=on -c archive_mode='off' -c archive_command='' -c ssl='off' -c hba_file='/home/postgres/prod-bak/pg_hba.conf' -c ident_file='/home/postgres/prod-bak/pg_ident.conf'"
 
                   echo "$MB_HOST:$MB_PORT:$MB_DATABASE:$MB_USER:$MB_PASSWORD" >> .pgpass
-                  echo "$MB_HOST:$MB_PORT:postgres:postgres:$SUPERUSER_PASSWORD" >> .pgpass
-                  echo "$MB_HOST:$MB_PORT:$MB_DATABASE:postgres:$SUPERUSER_PASSWORD" >> .pgpass
+                  echo "$MB_HOST:$MB_PORT:postgres:$SUPERUSER_USER:$SUPERUSER_PASSWORD" >> .pgpass
+                  echo "$MB_HOST:$MB_PORT:$MB_DATABASE:$SUPERUSER_USER:$SUPERUSER_PASSWORD" >> .pgpass
 
                   chmod 0600 .pgpass
                   echo RESTORING TO TEST...

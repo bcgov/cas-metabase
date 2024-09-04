@@ -3,9 +3,21 @@ SHELL := /usr/bin/env bash
 GIT_SHA1=$(shell git rev-parse HEAD)
 
 
-.PHONY: install
-install:
+.PHONY: install_database
+install_database:
 	@set -euo pipefail; \
+	echo "Installing database chart: cas-postgres/cas-postgres-cluster..."; \
+	helm repo add cas-postgres https://bcgov.github.io/cas-postgres/; \
+	helm repo update; \
+	helm upgrade --install --atomic --wait-for-jobs --timeout 1800s --namespace "$(GGIRCS_NAMESPACE_PREFIX)-$(ENVIRONMENT)" \
+	--values ./helm/cas-metabase-postgres-cluster/values.yaml \
+	--values ./helm/cas-metabase-postgres-cluster/values-$(ENVIRONMENT).yaml \
+	cas-metabase-db cas-postgres/cas-postgres-cluster --version 1.1.1;
+
+.PHONY: install_app
+install_app: 
+	@set -euo pipefail; \
+	echo "Installing metabase chart..."; \
 	dagConfig=$$(echo '{"org": "bcgov", "repo": "cas-metabase", "ref": "$(GIT_SHA1)", "path": "dags/cas_metabase_dags.py"}' | base64 -w0); \
 	helm dep up ./helm/cas-metabase; \
 	if [[ $(ENVIRONMENT) == test ]]; then \
@@ -22,6 +34,9 @@ install:
 		--values ./helm/cas-metabase/values-$(ENVIRONMENT).yaml \
 		cas-metabase ./helm/cas-metabase; \
 	fi;
+
+.PHONY: install
+install: install_database install_app
 
 .PHONY: lint_chart
 lint_chart: ## Checks the configured helm chart template definitions against the remote schema
