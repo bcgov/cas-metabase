@@ -14,7 +14,3 @@ cas-postgres:
 route:
   enable: true
   host: cas-metabase-dev.apps.silver.devops.gov.bc.ca
-
-patroni-migration:
-  from:
-    host: cas-metabase-patroni.9212c9-dev.svc.cluster.local
