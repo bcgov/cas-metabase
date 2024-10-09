@@ -55,30 +55,3 @@ download-cas-metabase-dags:
   dagId: fetch_and_save_dag_from_github
   helm:
     hook: "pre-install,pre-upgrade"
-<<<<<<< HEAD
-
-patroni-migration:
-  migrationJob:
-    ignoreRoles:
-      - metabase
-      - postgres
-
-  deployment:
-    name: cas-metabase
-    # for the KNP
-    sourceReleaseName: cas-metabase
-    targetReleaseName: cas-metabase-db
-
-  from:
-    secretName: cas-metabase-patroni
-    host: ~
-    passwordSecretKey: password-superuser
-    port: 5432
-    user: postgres
-    db: metabase
-
-  to:
-    superuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
-    appuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase
-=======
->>>>>>> c383af6 (chore: removing dependency charts and values)
