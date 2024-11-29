@@ -1,31 +1,3 @@
-cas-postgres:
-  patroni:
-    resources:
-      limits:
-        cpu: 500m
-        memory: 2Gi
-      requests:
-        cpu: 15m
-        memory: 600Mi
-    persistentVolume:
-      storageClass: netapp-block-standard
-      size: 5Gi
-    replicaCount: 3
-    env:
-      ALLOW_NOSSL: true
-      USE_WALG_BACKUP: "true"
-      USE_WALG_RESTORE: "true"
-    walE:
-      enable: true
-      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
-      gcsBucket:
-      # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret:
-    # options below are required if walE.enable is true
-  namespace:
-  gcs:
-    bucketSuffix:
-
 replicaCount: 2
 image:
   repository: metabase/metabase
@@ -37,9 +9,6 @@ database:
   metabaseUserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase
   superuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
   dbname: metabase
-  existingSecret: cas-metabase
-  existingSecretUsernameKey: database-user
-  existingSecretPasswordKey: database-password
 resources:
   limits:
     cpu: 500m
@@ -86,27 +55,3 @@ download-cas-metabase-dags:
   dagId: fetch_and_save_dag_from_github
   helm:
     hook: "pre-install,pre-upgrade"
-
-patroni-migration:
-  migrationJob:
-    ignoreRoles:
-      - metabase
-      - postgres
-
-  deployment:
-    name: cas-metabase
-    # for the KNP
-    sourceReleaseName: cas-metabase
-    targetReleaseName: cas-metabase-db
-
-  from:
-    secretName: cas-metabase-patroni
-    host: ~
-    passwordSecretKey: password-superuser
-    port: 5432
-    user: postgres
-    db: metabase
-
-  to:
-    superuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-postgres
-    appuserSecretName: cas-metabase-db-cas-postgres-cluster-pguser-metabase
