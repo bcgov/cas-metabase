@@ -3,6 +3,26 @@ entries:
   cas-metabase:
   - apiVersion: v2
     appVersion: 0.49.6
+    created: "2024-11-29T18:42:19.412379083Z"
+    dependencies:
+    - alias: download-cas-metabase-dags
+      name: cas-airflow-dag-trigger
+      repository: https://bcgov.github.io/cas-airflow
+      version: 1.0.8
+    - alias: prod-test-restore
+      condition: prod-test-restore.enable
+      name: cas-airflow-dag-trigger
+      repository: https://bcgov.github.io/cas-airflow
+      version: 1.0.8
+    description: A Helm chart for the CAS Metabase instance
+    digest: a45e0a811aa3d195859b6ff3528c6fa4dcd4adcbd762a4f053f005655a237f13
+    name: cas-metabase
+    type: application
+    urls:
+    - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.4.1/cas-metabase-0.4.1.tgz
+    version: 0.4.1
+  - apiVersion: v2
+    appVersion: 0.49.6
     created: "2024-04-16T18:27:33.50280203Z"
     dependencies:
     - name: cas-postgres
@@ -516,4 +536,4 @@ entries:
     urls:
     - https://github.com/bcgov/cas-metabase/releases/download/metabase-0.12.1/metabase-0.12.1.tgz
     version: 0.12.1
-generated: "2024-04-16T18:27:33.503005748Z"
+generated: "2024-11-29T18:42:19.412578787Z"
