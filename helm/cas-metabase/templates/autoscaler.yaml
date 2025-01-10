@@ -10,5 +10,11 @@ spec:
     apiVersion: apps/v1
   minReplicas: {{ .Values.metabaseHPA.minReplicas }}
   maxReplicas: {{ .Values.metabaseHPA.maxReplicas }}
-  targetCPUUtilizationPercentage: 80
+  metrics:
+  - type: Resource
+    resource:
+    name: cpu
+    target:
+      type: Utilization
+      averageUtilization: {{ .Values.metabaseHPA.avgUtilization }}
 {{- end }}

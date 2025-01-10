@@ -28,6 +28,7 @@ metabaseHPA:
   enable: true
   minReplicas: 2
   maxReplicas: 5
+  avgUtilization: 250
 
 prod-test-restore:
   enable: false
