@@ -3,6 +3,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "cas-metabase.fullname" . }}-hpa
+  labels: {{ include "cas-metabase.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     kind: Deployment
@@ -13,8 +14,8 @@ spec:
   metrics:
   - type: Resource
     resource:
-    name: cpu
-    target:
-      type: Utilization
-      averageUtilization: {{ .Values.metabaseHPA.avgUtilization }}
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.metabaseHPA.avgUtilization }}
 {{- end }}
