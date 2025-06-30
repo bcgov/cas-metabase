@@ -1,0 +1,6 @@
+# Configuration for the PGUpgrade object
+# See https://access.crunchydata.com/documentation/postgres-operator/latest/guides/major-postgres-version-upgrade#step-2-configure-the-upgrade-parameters-through-a-pgupgrade-object
+pgUpgrade:
+  postgresClusterName: cas-metabase-db-cas-postgres-cluster
+  fromPostgresVersion: 15
+  toPostgresVersion: 17
