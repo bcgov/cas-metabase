@@ -1,6 +1,0 @@
-dependencies:
-- name: pg-version-upgrade
-  repository: https://bcgov.github.io/cas-postgres
-  version: 0.0.2
-digest: sha256:18c154dd0dccba32bdd076ee96ab801f9b1f0a73d97ee2f177b31262f6599c1e
-generated: "2025-06-30T11:52:23.54308714-06:00"
