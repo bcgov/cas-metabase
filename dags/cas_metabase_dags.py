@@ -30,7 +30,7 @@ default_args = {**default_dag_args, "start_date": TWO_DAYS_AGO}
 If we're in the test namespace, dag first restores data from prod and then fixes the db connection passwords to be for the test db.
 """
 prod_test_restore_dag = DAG(
-    "cas_metabase_prod_test_restore", schedule_interval=None, default_args=default_args
+    "cas_metabase_prod_test_restore", schedule=None, default_args=default_args
 )
 
 
