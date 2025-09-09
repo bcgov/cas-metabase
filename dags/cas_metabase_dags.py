@@ -6,7 +6,7 @@ Triggering the cas-metabase-acme-renewal cron job
 from dag_configuration import default_dag_args
 from trigger_k8s_cronjob import trigger_k8s_cronjob
 from walg_backups import create_backup_task
-from airflow.operators.python_operator import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from airflow import DAG
 import os
