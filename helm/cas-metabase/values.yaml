@@ -11,10 +11,10 @@ database:
   dbname: metabase
 resources:
   limits:
-    cpu: 500m
+    cpu: 3000m
     memory: 4Gi
   requests:
-    cpu: 100m
+    cpu: 1000m
     memory: 2Gi
 podLabels:
   app.kubernetes.io/component: app
