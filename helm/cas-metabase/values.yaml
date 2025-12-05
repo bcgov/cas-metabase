@@ -42,16 +42,5 @@ readinessProbe:
 networkPolicies:
   enable: true
 
-prod-test-restore:
-  enable: false
-
 metabaseHPA:
   enable: false
-
-download-cas-metabase-dags:
-  image:
-    tag: 1.0.20
-  airflowEndpoint: https://cas-airflow-dev.apps.silver.devops.gov.bc.ca
-  dagId: fetch_and_save_dag_from_github
-  helm:
-    hook: "pre-install,pre-upgrade"
