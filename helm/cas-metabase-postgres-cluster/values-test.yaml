@@ -1,1 +1,3 @@
 environment: test
+postgresCluster:
+  storageSize: 3Gi

@@ -16,6 +16,7 @@ postgresCluster:
     limits:
       cpu: 500m
       memory: 1Gi
+  storageSize: 1Gi
 
   # The "users" value(s) is passed to the crunchy postgres operator to create the database.
   # See https://access.crunchydata.com/documentation/postgres-operator/latest/tutorials/basic-setup/user-management
