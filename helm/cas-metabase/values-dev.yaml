@@ -1,16 +1,3 @@
-cas-postgres:
-  patroni:
-    walE:
-      enable: true
-      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}
-      gcsBucket: 9212c9-dev-mb-backups
-      # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret: gcp-9212c9-dev-mb-backups-service-account-key # pragma: allowlist secret
-    # options below are required if walE.enable is true
-  namespace: 9212c9-dev
-  gcs:
-    bucketSuffix: mb-backups
-
 route:
   enable: true
   host: cas-metabase-dev.apps.silver.devops.gov.bc.ca

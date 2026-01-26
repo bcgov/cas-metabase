@@ -1,16 +1,3 @@
-cas-postgres:
-  patroni:
-    walE:
-      enable: true
-      # the GCS bucket name should be {{ namespace }}-{{ gcs.bucketSuffix }}, has to be < 28 characters
-      gcsBucket: 9212c9-test-mb-backups
-      # kubernetesSecret should be gcp-{{ namespace }}-{{ gcs.bucketSuffix }}-service-account-key
-      kubernetesSecret: gcp-9212c9-test-mb-backups-service-account-key # pragma: allowlist secret
-    # options below are required if walE.enable is true
-  namespace: 9212c9-test
-  gcs:
-    bucketSuffix: mb-backups
-
 route:
   enable: true
   host: cas-metabase-test.apps.silver.devops.gov.bc.ca
@@ -29,12 +16,3 @@ metabaseHPA:
   minReplicas: 2
   maxReplicas: 5
   avgUtilization: 350
-
-prod-test-restore:
-  enable: false
-  image:
-    tag: 1.0.8
-  airflowEndpoint: https://cas-airflow-test.apps.silver.devops.gov.bc.ca
-  dagId: cas_metabase_prod_test_restore
-  helm:
-    hook: ""
