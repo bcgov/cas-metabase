@@ -1,7 +1,7 @@
 replicaCount: 2
 image:
   repository: metabase/metabase
-  tag: v0.53.6
+  tag: v0.58.6
   pullPolicy: Always
 database:
   type: postgres
