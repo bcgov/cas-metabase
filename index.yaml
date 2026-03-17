@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   cas-metabase:
   - apiVersion: v2
+    appVersion: 0.59.2
+    created: "2026-03-17T16:47:40.127848471Z"
+    description: A Helm chart for the CAS Metabase instance
+    digest: aa04c34b0aaf20ea3b81491098b2c093059dcee98ac570df16570a0dc8d8bf17
+    name: cas-metabase
+    type: application
+    urls:
+    - https://github.com/bcgov/cas-metabase/releases/download/cas-metabase-0.8.0/cas-metabase-0.8.0.tgz
+    version: 0.8.0
+  - apiVersion: v2
     appVersion: 0.58.6
     created: "2026-02-12T19:55:43.074149523Z"
     description: A Helm chart for the CAS Metabase instance
@@ -626,4 +636,4 @@ entries:
     urls:
     - https://github.com/bcgov/cas-metabase/releases/download/metabase-0.12.1/metabase-0.12.1.tgz
     version: 0.12.1
-generated: "2026-02-12T19:55:43.074459871Z"
+generated: "2026-03-17T16:47:40.12810114Z"
