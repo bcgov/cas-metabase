@@ -1,0 +1,36 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  // See: https://github.com/bcgov/renovate-config
+  extends: [
+    "github>bcgov/renovate-config#2026.7.17",
+    // Updates `appVersion` in Chart.yaml by reading the `# renovate: image=...`
+    // comment directly above it. See helm/cas-metabase/Chart.yaml.
+    // https://docs.renovatebot.com/presets-customManagers/#custommanagershelmchartyamlappversions
+    "customManagers:helmChartYamlAppVersions",
+  ],
+
+  //   helm-values    -> helm/cas-metabase/values.yaml  (image.repository + image.tag)
+  //   custom.regex   -> helm/cas-metabase/Chart.yaml   (appVersion)
+  //   github-actions -> .github/workflows/*.yml
+  enabledManagers: ["helm-values", "custom.regex", "github-actions"],
+  labels: ["dependencies"],
+  automerge: false,
+  platformAutomerge: false,
+  dependencyDashboard: false,
+  packageRules: [
+    {
+      // The image is referenced twice and both must move together, otherwise
+      // the chart's appVersion drifts from the image it actually deploys.
+      description: "Metabase — bump values.yaml tag and Chart.yaml appVersion",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["metabase/metabase"],
+      groupName: "metabase",
+
+      // Blocks metabase's -beta tags. Renovate reports isStable:true for them
+      // ("-beta" parses into `suffix`, not `prerelease`), so ignoreUnstable
+      // misses them and a v0.64.0-beta would outrank every stable v0.63.x.
+      allowedVersions: "/^v\\d+\\.\\d+\\.\\d+(\\.\\d+)?$/",
+      minimumReleaseAge: "7 days",
+    },
+  ],
+}
