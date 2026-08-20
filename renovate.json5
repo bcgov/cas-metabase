@@ -2,7 +2,7 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   // See: https://github.com/bcgov/renovate-config
   extends: [
-    "github>bcgov/renovate-config#2026.7.17",
+    "github>bcgov/renovate-config#2026.8.18",
     // Updates `appVersion` in Chart.yaml by reading the `# renovate: image=...`
     // comment directly above it. See helm/cas-metabase/Chart.yaml.
     // https://docs.renovatebot.com/presets-customManagers/#custommanagershelmchartyamlappversions
@@ -17,6 +17,9 @@
   automerge: false,
   platformAutomerge: false,
   dependencyDashboard: false,
+  // Lets Renovate rebase existing PRs outside the preset's schedule window.
+  // Branch creation stays gated by the schedule.
+  updateNotScheduled: true,
   packageRules: [
     {
       // The image is referenced twice and both must move together, otherwise
@@ -31,6 +34,15 @@
       // misses them and a v0.64.0-beta would outrank every stable v0.63.x.
       allowedVersions: "/^v\\d+\\.\\d+\\.\\d+(\\.\\d+)?$/",
       minimumReleaseAge: "7 days",
+      // Matches only `version:` — `apiVersion:`/`appVersion:` differ by case.
+      bumpVersions: [
+        {
+          name: "cas-metabase chart version",
+          filePatterns: ["helm/cas-metabase/Chart.yaml"],
+          matchStrings: ["version:\\s*(?<version>[^\\s]+)"],
+          bumpType: "{{#if isPatch}}patch{{else}}minor{{/if}}",
+        },
+      ],
     },
   ],
 }
