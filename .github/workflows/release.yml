@@ -21,7 +21,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.4.0
+          version: v3.21.4
 
       - name: Add helm repos
         run: |
@@ -32,7 +32,7 @@ jobs:
           helm repo add pipeline https://bcgov.github.io/cas-pipeline/
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.1
+        uses: helm/chart-releaser-action@v1.7.0
         with:
           charts_dir: helm
         env:
