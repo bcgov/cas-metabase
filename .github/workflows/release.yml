@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 5421-gh-actions-permissions
 
 permissions:
   contents: read
